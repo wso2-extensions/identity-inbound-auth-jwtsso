@@ -103,7 +103,6 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                         }
                         builder.setParameters(parameters);
                     }
-
                 } else {
                     builder.setStatusCode(HttpServletResponse.SC_UNAUTHORIZED);
                 }
@@ -137,9 +136,8 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                 String errorUrlParamName = jwtInboundResponse.getErrorUrlParamName();
                 String errorUrl = jwtInboundResponse.getErrorUrl();
                 if (log.isDebugEnabled()) {
-                    log.debug(
-                            "Error URL parameter: " + JWTInboundUtil.neutralize(errorUrlParamName) + " with the " +
-                                    "value: " + JWTInboundUtil.neutralize(errorUrl));
+                    log.debug("Error URL parameter: " + JWTInboundUtil.neutralize(errorUrlParamName) +
+                            " with the value: " + JWTInboundUtil.neutralize(errorUrl));
                 }
                 if (StringUtils.isNotBlank(errorUrl)) {
                     // Add error URL parameter if provided.
@@ -163,5 +161,4 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
 
         this.create(identityResponse);
     }
-
 }

@@ -25,6 +25,7 @@ public class JWTInboundConstants {
     public static final String SP_ID = "jwtRP";
     public static final String LOGOUT_PATH = "/logout";
     public static final String BASE_PATH = "/jwtsso";
+    public static final String FRIENDLY_NAME = "JWT SSO Configuration";
 
     /**
      * Defines the SP configuration elements
@@ -70,5 +71,7 @@ public class JWTInboundConstants {
 
         public static final String MISCONFIGURATION_STATUS = "misconfiguration.error";
         public static final String MISCONFIGURATION_MESSAGE = "something.went.wrong.contact.admin";
+        public static final String ERROR_STATUS = "status";
+        public static final String ERROR_MESSAGE = "statusMsg";
     }
 }

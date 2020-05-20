@@ -67,9 +67,8 @@ public class JWTInboundRequestFactory extends HttpIdentityRequestFactory {
             }
             log.info("Handling authentication request through JWT Inbound Authenticator.");
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**

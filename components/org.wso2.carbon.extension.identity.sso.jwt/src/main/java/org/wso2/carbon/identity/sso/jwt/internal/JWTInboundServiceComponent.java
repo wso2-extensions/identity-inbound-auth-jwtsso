@@ -77,7 +77,6 @@ public class JWTInboundServiceComponent {
             log.error("Error Activating JWT Inbound Auth Package.");
             throw new RuntimeException(e);
         }
-
     }
 
     protected void deactivate(ComponentContext ctxt) {

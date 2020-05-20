@@ -125,8 +125,8 @@ public class JWTInboundUtil {
         JWTInboundResponse.JWTInboundResponseBuilder respBuilder = new JWTInboundResponse.JWTInboundResponseBuilder();
         respBuilder.setParameters(new HashMap<String, String>() {
             {
-                put("status", status);
-                put("statusMsg", statusMsg);
+                put(JWTInboundConstants.ErrorMessages.ERROR_STATUS, status);
+                put(JWTInboundConstants.ErrorMessages.ERROR_MESSAGE, statusMsg);
             }
         });
         respBuilder.setEndpointUrl(ConfigurationFacade.getInstance().getAuthenticationEndpointRetryURL());

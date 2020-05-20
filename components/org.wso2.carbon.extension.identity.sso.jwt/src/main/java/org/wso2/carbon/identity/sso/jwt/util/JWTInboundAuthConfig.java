@@ -55,7 +55,7 @@ public class JWTInboundAuthConfig extends AbstractInboundAuthenticatorConfig
     @Override
     public String getFriendlyName() {
         // The human-readable name that gets printed in the SP config.
-        return "JWT SSO Configuration";
+        return JWTInboundConstants.FRIENDLY_NAME;
     }
 
     @Override

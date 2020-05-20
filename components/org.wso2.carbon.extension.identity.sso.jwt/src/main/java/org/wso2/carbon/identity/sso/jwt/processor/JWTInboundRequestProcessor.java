@@ -185,8 +185,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                     log.debug("Handling logout request.");
                 }
                 return buildResponseForFrameworkLogout(messageContext);
-
-            } else if (sessionId != null) {
+            } else if (StringUtils.isNotBlank(sessionId)) {
                 // A session already exists, which means that this is call is coming from the framework
                 // after authentication or after logged out.
                 AuthenticationResult authenticationResult = processResponseFromFrameworkLogin(messageContext,
@@ -252,7 +251,6 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                     respBuilder.setJwtParamName(jwtParamName);
                     respBuilder.setRedirectUrlParamName(redirectUrlParamName);
                     respBuilder.setErrorUrlParamName(errorUrlParamName);
-
                 } else {
                     // Non-authenticated scenario, hence considering this request as coming after logged out
                     // Therefore redirecting the user to Logout URL of SP (Relying Party).
@@ -512,9 +510,9 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                 log.debug("Validating regex for the input: " + neutralize(input) + " against the regex: " +
                         neutralize(regex));
             }
-            Pattern p = Pattern.compile(regex);
-            Matcher m = p.matcher(input);
-            if (m.matches()) {
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(input);
+            if (matcher.matches()) {
                 if (log.isDebugEnabled()) {
                     log.debug("Regex validation success.");
                 }
@@ -522,7 +520,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             }
         }
         if (log.isDebugEnabled()) {
-            log.debug("Regex validation failed.");
+            log.debug("Regex validation failed for the input: " + neutralize(input));
         }
         return false;
     }
