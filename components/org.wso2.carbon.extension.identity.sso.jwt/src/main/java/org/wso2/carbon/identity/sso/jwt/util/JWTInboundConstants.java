@@ -65,7 +65,7 @@ public class JWTInboundConstants {
     }
 
     /**
-     * Defines the error messages defined in message defined in Resources.properties file of the authentication endpoint
+     * Defines the error messages defined in Resources.properties file of the authentication endpoint
      */
     public static class ErrorMessages {
 

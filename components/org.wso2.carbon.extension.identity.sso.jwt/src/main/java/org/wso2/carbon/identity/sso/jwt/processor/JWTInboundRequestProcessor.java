@@ -239,6 +239,12 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         }
     }
 
+    /**
+     * Setting the redirect URL parameter and validating against the regex configured in the SP configuration.
+     *
+     * @param identityRequest  The identity request
+     * @return True if the redirect URL is valid or not provided. False if the validation failed against the regex.
+     */
     private boolean handleRedirectUrl(IdentityRequest identityRequest) {
 
         // Set Redirect URL
@@ -273,6 +279,12 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         return true;
     }
 
+    /**
+     * Setting the error URL parameter and validating against the regex configured in the SP configuration.
+     *
+     * @param identityRequest  The identity request
+     * @return True if the error URL is valid or not provided. False if the validation failed against the regex.
+     */
     private boolean handleErrorUrl(IdentityRequest identityRequest) {
 
         // Set Error URL
@@ -307,6 +319,14 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         return true;
     }
 
+    /**
+     * Handles the response coming from the framework after authentication.
+     *
+     * @param identityRequest      The identity request
+     * @param authenticationResult The authentication result
+     * @param respBuilder          The response builder
+     * @return The response builder after setting the required options
+     */
     private JWTInboundResponse.JWTInboundResponseBuilder handleAuthenticationResult(
             IdentityRequest identityRequest, AuthenticationResult authenticationResult,
             JWTInboundResponse.JWTInboundResponseBuilder respBuilder) {
@@ -370,6 +390,13 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         return respBuilder;
     }
 
+    /**
+     * Handles the response coming after logged out.
+     *
+     * @param identityRequest The identity request
+     * @param respBuilder     The response builder
+     * @return The response builder after setting the required options
+     */
     private JWTInboundResponse.JWTInboundResponseBuilder handleLogoutResult(
             IdentityRequest identityRequest, JWTInboundResponse.JWTInboundResponseBuilder respBuilder) {
 
@@ -536,9 +563,9 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     /**
      * This method is used to validate a string against a regex
      *
-     * @param regex
-     * @param input
-     * @return A boolean value
+     * @param regex The regex
+     * @param input The string to be validated against the regex
+     * @return True if the validation is success.
      */
     public boolean validateRegexInput(String regex, String input) {
 
