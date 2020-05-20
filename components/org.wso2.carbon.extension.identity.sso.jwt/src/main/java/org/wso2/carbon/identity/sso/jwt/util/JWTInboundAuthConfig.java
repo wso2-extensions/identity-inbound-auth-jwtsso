@@ -93,52 +93,56 @@ public class JWTInboundAuthConfig extends AbstractInboundAuthenticatorConfig
 
         Property jwtExp = new Property();
         jwtExp.setName(JWTInboundConstants.SPBasedConfigs.JWT_EXP_TIME);
-        jwtExp.setType("INTEGER");
         jwtExp.setDisplayName("JWT Token Expiration Period");
         jwtExp.setDescription("Time in seconds to define the exp claim of JWT token from the token generated time " +
                 "(Default value: 120).");
         jwtExp.setDisplayOrder(3);
 
-        jwtExp.setOptions(new String[]{"opt1", "opt2"});
+        Property jwtAlgorithm = new Property();
+        jwtAlgorithm.setName(JWTInboundConstants.SPBasedConfigs.JWS_ALGORITHM);
+        jwtAlgorithm.setDisplayName("JWT Signing Algorithm");
+        jwtAlgorithm.setDefaultValue("HS256");
+        jwtAlgorithm.setDescription("Supported algorithms: HS256, HS384, HS512 (Default value: HS256).");
+        jwtAlgorithm.setDisplayOrder(4);
 
         Property redirectUrl = new Property();
         redirectUrl.setName(JWTInboundConstants.SPBasedConfigs.REDIRECT_URL_REGEX);
         redirectUrl.setDisplayName("Redirect URL Regex");
-        redirectUrl.setDisplayOrder(4);
+        redirectUrl.setDisplayOrder(5);
 
         Property errorUrl = new Property();
         errorUrl.setName(JWTInboundConstants.SPBasedConfigs.ERROR_URL_REGEX);
         errorUrl.setDisplayName("Error URL Regex");
-        errorUrl.setDisplayOrder(5);
+        errorUrl.setDisplayOrder(6);
 
         Property logoutUrl = new Property();
         logoutUrl.setName(JWTInboundConstants.SPBasedConfigs.LOGOUT_URL);
         logoutUrl.setDisplayName("Logout URL");
         logoutUrl.setRequired(true);
-        logoutUrl.setDisplayOrder(6);
+        logoutUrl.setDisplayOrder(7);
 
         Property jwtParamName = new Property();
         jwtParamName.setName(JWTInboundConstants.SPBasedConfigs.JWT_PARAM_NAME);
         jwtParamName.setDisplayName("JWT Parameter Name");
         jwtParamName.setDescription("Defines the URL query parameter name of the JWT token to be sent (Default " +
                 "value: jwt).");
-        jwtParamName.setDisplayOrder(7);
+        jwtParamName.setDisplayOrder(8);
 
         Property redirectUrlParamName = new Property();
         redirectUrlParamName.setName(JWTInboundConstants.SPBasedConfigs.REDIRECT_URL_PARAM_NAME);
         redirectUrlParamName.setDisplayName("Redirect URL Parameter Name");
         redirectUrlParamName.setDescription("Defines the URL query parameter name of the Redirect URL - Applicable " +
                 "only if the Redirect URL is provided in the SSO request (Default value: return_to).");
-        redirectUrlParamName.setDisplayOrder(8);
+        redirectUrlParamName.setDisplayOrder(9);
 
         Property errorUrlParamName = new Property();
         errorUrlParamName.setName(JWTInboundConstants.SPBasedConfigs.ERROR_URL_PARAM_NAME);
         errorUrlParamName.setDisplayName("Error URL Parameter Name");
         errorUrlParamName.setDescription("Defines the URL query parameter name of the Error URL - Applicable only if " +
                 "the Error URL is provided in the SSO request (Default value: error_url).");
-        errorUrlParamName.setDisplayOrder(9);
+        errorUrlParamName.setDisplayOrder(10);
 
-        return new Property[]{relParty, siteAPIUrl, apiKey, jwtExp, redirectUrl, errorUrl, logoutUrl, jwtParamName,
-                redirectUrlParamName, errorUrlParamName};
+        return new Property[]{relParty, siteAPIUrl, apiKey, jwtExp, jwtAlgorithm, redirectUrl, errorUrl, logoutUrl,
+                jwtParamName, redirectUrlParamName, errorUrlParamName};
     }
 }

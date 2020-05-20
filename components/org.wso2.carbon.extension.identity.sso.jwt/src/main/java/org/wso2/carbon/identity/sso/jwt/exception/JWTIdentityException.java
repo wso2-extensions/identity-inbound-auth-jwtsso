@@ -25,6 +25,11 @@ import org.wso2.carbon.identity.base.IdentityException;
  */
 public class JWTIdentityException extends IdentityException {
 
+    public JWTIdentityException(String errorDescription) {
+
+        super(errorDescription);
+    }
+
     public JWTIdentityException(String errorDescription, Throwable cause) {
 
         super(errorDescription, cause);

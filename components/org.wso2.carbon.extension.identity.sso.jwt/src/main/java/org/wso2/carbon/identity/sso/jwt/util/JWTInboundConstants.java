@@ -35,6 +35,7 @@ public class JWTInboundConstants {
         public static final String SITE_API_URL = "SiteAPIURL";
         public static final String API_KEY = "APIKey";
         public static final String JWT_EXP_TIME = "JWTExpiryTime";
+        public static final String JWS_ALGORITHM = "JWTAlgorithm";
         public static final String REDIRECT_URL_REGEX = "ReturnToURLRegex";
         public static final String ERROR_URL_REGEX = "ErrorURLRegex";
         public static final String LOGOUT_URL = "LogoutURL";
@@ -55,21 +56,19 @@ public class JWTInboundConstants {
     }
 
     /**
-     * Defines the identity.xml configurations for the extension points
-     */
-    public static class IdentityConfigs {
-
-        public static final String JWT_RESPONSE_FACTORY = "JWTSSO.ResponseFactory";
-        public static final String JWT_REQUEST_FACTORY = "JWTSSO.RequestFactory";
-        public static final String JWT_REQUEST_PROCESSOR = "JWTSSO.RequestProcessor";
-        public static final String JWT_AUTH_CONFIG = "JWTSSO.AuthConfig";
-    }
-
-    /**
      * Defines name of the Token loggable configuration in identity_log_tokens.properties
      */
     public static class IdentityTokens {
 
         public static final String JWT_TOKEN = "JWT_Token";
+    }
+
+    /**
+     * Defines the error messages defined in message defined in Resources.properties file of the authentication endpoint
+     */
+    public static class ErrorMessages {
+
+        public static final String MISCONFIGURATION_STATUS = "misconfiguration.error";
+        public static final String MISCONFIGURATION_MESSAGE = "something.went.wrong.contact.admin";
     }
 }

@@ -31,7 +31,10 @@ import org.wso2.carbon.identity.application.authentication.framework.inbound.Htt
 import org.wso2.carbon.identity.application.authentication.framework.inbound.IdentityProcessor;
 import org.wso2.carbon.identity.application.mgt.AbstractInboundAuthenticatorConfig;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
-import org.wso2.carbon.identity.sso.jwt.util.JWTInboundConstants;
+import org.wso2.carbon.identity.sso.jwt.factory.JWTInboundIdentityResponseFactory;
+import org.wso2.carbon.identity.sso.jwt.factory.JWTInboundRequestFactory;
+import org.wso2.carbon.identity.sso.jwt.processor.JWTInboundRequestProcessor;
+import org.wso2.carbon.identity.sso.jwt.util.JWTInboundAuthConfig;
 import org.wso2.carbon.identity.sso.jwt.util.JWTInboundUtil;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -55,28 +58,20 @@ public class JWTInboundServiceComponent {
 
         try {
             IdentityUtil.populateProperties();
-            JWTInboundUtil
-                    .setAuthConfigClass(IdentityUtil.getProperty(JWTInboundConstants.IdentityConfigs.JWT_AUTH_CONFIG));
-            JWTInboundUtil.setRequestProcessorClass(
-                    IdentityUtil.getProperty(JWTInboundConstants.IdentityConfigs.JWT_REQUEST_PROCESSOR));
-            JWTInboundUtil.setResponseFactoryClass(
-                    IdentityUtil.getProperty(JWTInboundConstants.IdentityConfigs.JWT_RESPONSE_FACTORY));
-            JWTInboundUtil.setRequestFactoryClass(
-                    IdentityUtil.getProperty(JWTInboundConstants.IdentityConfigs.JWT_REQUEST_FACTORY));
 
-            AbstractInboundAuthenticatorConfig jwtInboundAuthConfig = JWTInboundUtil.getAuthConfigClass();
+            JWTInboundAuthConfig jwtInboundAuthConfig = new JWTInboundAuthConfig();
             Hashtable<String, String> props = new Hashtable<>();
             ctxt.getBundleContext().registerService(AbstractInboundAuthenticatorConfig.class,
                     jwtInboundAuthConfig, props);
 
             ctxt.getBundleContext().registerService(IdentityProcessor.class.getName(),
-                    JWTInboundUtil.getRequestProcessorClass(jwtInboundAuthConfig), null);
+                    new JWTInboundRequestProcessor(jwtInboundAuthConfig), null);
 
             ctxt.getBundleContext().registerService(HttpIdentityResponseFactory.class.getName(),
-                    JWTInboundUtil.getResponseFactoryClass(), null);
+                    new JWTInboundIdentityResponseFactory(), null);
 
             ctxt.getBundleContext().registerService(HttpIdentityRequestFactory.class.getName(),
-                    JWTInboundUtil.getRequestFactoryClass(), null);
+                    new JWTInboundRequestFactory(), null);
             log.info("JWT inbound authenticator bundle is activated.");
         } catch (Exception e) {
             log.error("Error Activating JWT Inbound Auth Package.");
