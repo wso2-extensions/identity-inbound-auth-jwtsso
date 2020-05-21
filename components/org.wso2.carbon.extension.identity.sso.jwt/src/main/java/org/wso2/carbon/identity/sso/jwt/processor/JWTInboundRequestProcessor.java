@@ -56,6 +56,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -514,6 +515,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                 log.debug("Generating JWT token for subject: " + neutralize(userName));
             }
             claimsSet.subject(userName);
+            claimsSet.jwtID(UUID.randomUUID().toString());
 
             Date date = new Date(currentTimeInMillis);
             String expSeconds = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.JWT_EXP_TIME);
