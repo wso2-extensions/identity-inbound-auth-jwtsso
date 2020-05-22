@@ -90,7 +90,8 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                 // Redirect to Logout URL.
                 builder.setRedirectURL(logoutUrl);
             } else if (StringUtils.isBlank(inboundResponse.getToken())) {
-                // un-authenticated scenario without logout URL - Redirect to Retry.do - Show Client Error
+                // Reaches after the successful logout and if the Logout URL is not configured in the
+                // SP configuration. Redirect to Retry.do to show the Client Error.
                 String clientErrorPage = inboundResponse.getEndpointUrl();
                 if (StringUtils.isNotBlank(clientErrorPage)) {
                     builder.setStatusCode(HttpServletResponse.SC_FOUND);
