@@ -79,33 +79,37 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
         if (identityResponse instanceof JWTInboundResponse) {
             JWTInboundResponse inboundResponse = (JWTInboundResponse) identityResponse;
 
+            String jwtToken = inboundResponse.getToken();
             String logoutUrl = inboundResponse.getLogoutUrl();
-            if (StringUtils.isBlank(inboundResponse.getToken()) && StringUtils.isNotBlank(logoutUrl)) {
+            if (isLogoutResponse(jwtToken)) {
                 // Successful logout scenario.
-                if (log.isDebugEnabled()) {
-                    log.debug("Logout URL: " + JWTInboundUtil.neutralize(logoutUrl) + " provided and the token is set" +
-                            " to empty. Hence considering as successful logout scenario.");
-                }
-                builder.setStatusCode(HttpServletResponse.SC_FOUND);
-                // Redirect to Logout URL.
-                builder.setRedirectURL(logoutUrl);
-            } else if (StringUtils.isBlank(inboundResponse.getToken())) {
-                // Reaches after the successful logout and if the Logout URL is not configured in the
-                // SP configuration. Redirect to Retry.do to show the Client Error.
-                String clientErrorPage = inboundResponse.getEndpointUrl();
-                if (StringUtils.isNotBlank(clientErrorPage)) {
-                    builder.setStatusCode(HttpServletResponse.SC_FOUND);
-                    builder.setRedirectURL(clientErrorPage);
-
-                    Map<String, String[]> parameters = new HashMap<>();
-                    if (inboundResponse.getParameters() != null) {
-                        for (Map.Entry<String, String> entry : inboundResponse.getParameters().entrySet()) {
-                            parameters.put(entry.getKey(), new String[]{entry.getValue()});
-                        }
-                        builder.setParameters(parameters);
+                if (isValidLogoutResponse(logoutUrl)) {
+                    // Successful logout and the Logout URL is configured, hence redirecting to Logout URL.
+                    if (log.isDebugEnabled()) {
+                        log.debug("Logout URL: " + JWTInboundUtil.neutralize(logoutUrl) +
+                                " provided and the token is set" +
+                                " to empty. Hence considering as successful logout scenario.");
                     }
+                    builder.setStatusCode(HttpServletResponse.SC_FOUND);
+                    // Redirect to Logout URL.
+                    builder.setRedirectURL(logoutUrl);
                 } else {
-                    builder.setStatusCode(HttpServletResponse.SC_UNAUTHORIZED);
+                    // Successful logout but the Logout URL is not configured, hence redirecting to error page.
+                    String clientErrorPage = inboundResponse.getEndpointUrl();
+                    if (StringUtils.isNotBlank(clientErrorPage)) {
+                        builder.setStatusCode(HttpServletResponse.SC_FOUND);
+                        builder.setRedirectURL(clientErrorPage);
+
+                        Map<String, String[]> parameters = new HashMap<>();
+                        if (inboundResponse.getParameters() != null) {
+                            for (Map.Entry<String, String> entry : inboundResponse.getParameters().entrySet()) {
+                                parameters.put(entry.getKey(), new String[]{entry.getValue()});
+                            }
+                            builder.setParameters(parameters);
+                        }
+                    } else {
+                        builder.setStatusCode(HttpServletResponse.SC_UNAUTHORIZED);
+                    }
                 }
             } else {
                 // Successful authenticated scenario.
@@ -114,7 +118,6 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                 }
                 builder.setStatusCode(HttpServletResponse.SC_FOUND);
                 String jwtParamName = inboundResponse.getJwtParamName();
-                String jwtToken = inboundResponse.getToken();
                 if (log.isDebugEnabled() &&
                         IdentityUtil.isTokenLoggable(JWTInboundConstants.IdentityTokens.JWT_TOKEN)) {
                     log.debug(
@@ -154,6 +157,36 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
             }
         }
         return builder;
+    }
+
+    /**
+     * Check if the response received is a logout response.
+     *
+     * @param jwtToken The JWT token
+     * @return
+     */
+    private boolean isLogoutResponse(String jwtToken) {
+
+        // Consider as logout response if the token is set to empty.
+        if (StringUtils.isBlank(jwtToken)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if the logout response received can be completed by ensuring if the Logout URL is configured.
+     *
+     * @param logoutUrl The logout URL to redirect to.
+     * @return
+     */
+    private boolean isValidLogoutResponse(String logoutUrl) {
+
+        // Check if the Logout URL is configured in the SP configuration
+        if (StringUtils.isNotBlank(logoutUrl)) {
+            return true;
+        }
+        return false;
     }
 
     @Override

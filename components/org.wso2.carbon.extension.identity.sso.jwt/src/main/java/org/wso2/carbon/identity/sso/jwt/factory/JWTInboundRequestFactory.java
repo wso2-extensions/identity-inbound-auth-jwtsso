@@ -56,6 +56,7 @@ public class JWTInboundRequestFactory extends HttpIdentityRequestFactory {
      */
     @Override
     public boolean canHandle(HttpServletRequest request, HttpServletResponse response) {
+
         // Return true if the incoming request to the identity servlet in the form of : "/identity/BASE_PATH".
         String requestUri = request.getRequestURI();
         if (log.isDebugEnabled()) {
