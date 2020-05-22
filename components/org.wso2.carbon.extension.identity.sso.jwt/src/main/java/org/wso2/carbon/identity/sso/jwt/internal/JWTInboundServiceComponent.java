@@ -74,7 +74,7 @@ public class JWTInboundServiceComponent {
                     new JWTInboundRequestFactory(), null);
             log.info("JWT inbound authenticator bundle is activated.");
         } catch (Exception e) {
-            log.error("Error Activating JWT Inbound Auth Package.");
+            log.error("Error Activating JWT Inbound Auth Package.", e);
             throw new RuntimeException(e);
         }
     }

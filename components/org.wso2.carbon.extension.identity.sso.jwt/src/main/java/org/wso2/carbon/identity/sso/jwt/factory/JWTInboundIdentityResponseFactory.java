@@ -67,7 +67,7 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
      * Converts the received IdentityResponse instance to an HTTPResponse so that it could be sent to the calling party.
      * This is where the logic for picking up and setting any parameters/headers/cookies etc is written.
      *
-     * @param identityResponse the received (and handle-able IdentityResponse instance
+     * @param identityResponse The IdentityResponse instance
      * @return a corresponding HTTPResponse in the form of a builder, so that it could be built on demand
      */
     @Override
@@ -77,10 +77,10 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                 = new HttpIdentityResponse.HttpIdentityResponseBuilder();
 
         if (identityResponse instanceof JWTInboundResponse) {
-            JWTInboundResponse jwtInboundResponse = (JWTInboundResponse) identityResponse;
+            JWTInboundResponse inboundResponse = (JWTInboundResponse) identityResponse;
 
-            String logoutUrl = jwtInboundResponse.getLogoutUrl();
-            if (StringUtils.isBlank(jwtInboundResponse.getToken()) && StringUtils.isNotBlank(logoutUrl)) {
+            String logoutUrl = inboundResponse.getLogoutUrl();
+            if (StringUtils.isBlank(inboundResponse.getToken()) && StringUtils.isNotBlank(logoutUrl)) {
                 // Successful logout scenario.
                 if (log.isDebugEnabled()) {
                     log.debug("Logout URL: " + JWTInboundUtil.neutralize(logoutUrl) + " provided and the token is set" +
@@ -89,16 +89,16 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                 builder.setStatusCode(HttpServletResponse.SC_FOUND);
                 // Redirect to Logout URL.
                 builder.setRedirectURL(logoutUrl);
-            } else if (StringUtils.isBlank(jwtInboundResponse.getToken())) {
+            } else if (StringUtils.isBlank(inboundResponse.getToken())) {
                 // un-authenticated scenario without logout URL - Redirect to Retry.do - Show Client Error
-                String clientErrorPage = jwtInboundResponse.getEndpointUrl();
+                String clientErrorPage = inboundResponse.getEndpointUrl();
                 if (StringUtils.isNotBlank(clientErrorPage)) {
                     builder.setStatusCode(HttpServletResponse.SC_FOUND);
                     builder.setRedirectURL(clientErrorPage);
 
                     Map<String, String[]> parameters = new HashMap<>();
-                    if (jwtInboundResponse.getParameters() != null) {
-                        for (Map.Entry<String, String> entry : jwtInboundResponse.getParameters().entrySet()) {
+                    if (inboundResponse.getParameters() != null) {
+                        for (Map.Entry<String, String> entry : inboundResponse.getParameters().entrySet()) {
                             parameters.put(entry.getKey(), new String[]{entry.getValue()});
                         }
                         builder.setParameters(parameters);
@@ -112,8 +112,8 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                     log.debug("Successful authenticated scenario. Building the response to redirect.");
                 }
                 builder.setStatusCode(HttpServletResponse.SC_FOUND);
-                String jwtParamName = jwtInboundResponse.getJwtParamName();
-                String jwtToken = jwtInboundResponse.getToken();
+                String jwtParamName = inboundResponse.getJwtParamName();
+                String jwtToken = inboundResponse.getToken();
                 if (log.isDebugEnabled() &&
                         IdentityUtil.isTokenLoggable(JWTInboundConstants.IdentityTokens.JWT_TOKEN)) {
                     log.debug(
@@ -122,8 +122,8 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                 }
                 builder.addParameter(jwtParamName, jwtToken);
 
-                String redirectUrlParamName = jwtInboundResponse.getRedirectUrlParamName();
-                String redirectUrl = jwtInboundResponse.getRedirectUrl();
+                String redirectUrlParamName = inboundResponse.getRedirectUrlParamName();
+                String redirectUrl = inboundResponse.getRedirectUrl();
                 if (log.isDebugEnabled()) {
                     log.debug("Redirect URL parameter: " + JWTInboundUtil.neutralize(redirectUrlParamName) +
                             " with the value: " + JWTInboundUtil.neutralize(redirectUrl));
@@ -133,8 +133,8 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                     builder.addParameter(redirectUrlParamName, redirectUrl);
                 }
 
-                String errorUrlParamName = jwtInboundResponse.getErrorUrlParamName();
-                String errorUrl = jwtInboundResponse.getErrorUrl();
+                String errorUrlParamName = inboundResponse.getErrorUrlParamName();
+                String errorUrl = inboundResponse.getErrorUrl();
                 if (log.isDebugEnabled()) {
                     log.debug("Error URL parameter: " + JWTInboundUtil.neutralize(errorUrlParamName) +
                             " with the value: " + JWTInboundUtil.neutralize(errorUrl));
@@ -144,10 +144,10 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                     builder.addParameter(errorUrlParamName, errorUrl);
                 }
                 // Redirect to API endpoint.
-                String endpointUrl = jwtInboundResponse.getEndpointUrl();
+                String endpointUrl = inboundResponse.getEndpointUrl();
                 if (log.isDebugEnabled()) {
                     log.debug("Defining the Endpoint URL: " + JWTInboundUtil.neutralize(endpointUrl) +
-                            " as the redirection endpoint");
+                            " as the redirection endpoint.");
                 }
                 builder.setRedirectURL(endpointUrl);
             }

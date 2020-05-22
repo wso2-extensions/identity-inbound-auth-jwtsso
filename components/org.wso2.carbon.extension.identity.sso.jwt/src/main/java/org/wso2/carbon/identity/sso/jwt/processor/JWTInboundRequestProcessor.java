@@ -51,6 +51,7 @@ import org.wso2.carbon.identity.sso.jwt.message.JWTInboundRequest;
 import org.wso2.carbon.identity.sso.jwt.message.JWTInboundResponse;
 import org.wso2.carbon.identity.sso.jwt.util.JWTInboundConstants;
 import org.wso2.carbon.identity.sso.jwt.util.JWTInboundUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -106,7 +107,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
 
         String endpoint = "identity";
         String tenantDomain = identityMessageContext.getRequest().getTenantDomain();
-        if (!tenantDomain.equals("carbon.super")) {
+        if (!tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             endpoint = "t/" + tenantDomain + "/identity";
         }
         return IdentityUtil.getServerURL(endpoint, false, false);
@@ -243,7 +244,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     /**
      * Setting the redirect URL parameter and validating against the regex configured in the SP configuration.
      *
-     * @param identityRequest  The identity request
+     * @param identityRequest The identity request
      * @return True if the redirect URL is valid or not provided. False if the validation failed against the regex.
      */
     private boolean handleRedirectUrl(IdentityRequest identityRequest) {
@@ -283,7 +284,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     /**
      * Setting the error URL parameter and validating against the regex configured in the SP configuration.
      *
-     * @param identityRequest  The identity request
+     * @param identityRequest The identity request
      * @return True if the error URL is valid or not provided. False if the validation failed against the regex.
      */
     private boolean handleErrorUrl(IdentityRequest identityRequest) {

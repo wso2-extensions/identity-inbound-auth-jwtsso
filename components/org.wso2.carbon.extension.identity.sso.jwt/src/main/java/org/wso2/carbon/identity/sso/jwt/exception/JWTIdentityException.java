@@ -21,7 +21,7 @@ package org.wso2.carbon.identity.sso.jwt.exception;
 import org.wso2.carbon.identity.base.IdentityException;
 
 /**
- * The exception class used to throw errors on the server side
+ * The exception class used to throw errors on the server side.
  */
 public class JWTIdentityException extends IdentityException {
 

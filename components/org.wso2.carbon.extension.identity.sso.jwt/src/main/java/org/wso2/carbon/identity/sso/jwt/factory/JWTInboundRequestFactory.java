@@ -56,16 +56,16 @@ public class JWTInboundRequestFactory extends HttpIdentityRequestFactory {
      */
     @Override
     public boolean canHandle(HttpServletRequest request, HttpServletResponse response) {
-        //Return true if the incoming request to the identity servlet in the form of : "/identity/BASE_PATH".
+        // Return true if the incoming request to the identity servlet in the form of : "/identity/BASE_PATH".
         String requestUri = request.getRequestURI();
         if (log.isDebugEnabled()) {
             log.debug("Request URI: " + JWTInboundUtil.neutralize(requestUri));
         }
         if (StringUtils.isNotBlank(requestUri) && requestUri.contains(JWTInboundConstants.BASE_PATH)) {
             if (log.isDebugEnabled()) {
-                log.debug("Request URI contains the base path: " + JWTInboundConstants.BASE_PATH);
+                log.debug("Request URI contains the base path: " + JWTInboundConstants.BASE_PATH + "\nHandling " +
+                        "authentication request through JWT Inbound Authenticator.");
             }
-            log.info("Handling authentication request through JWT Inbound Authenticator.");
             return true;
         }
         return false;
