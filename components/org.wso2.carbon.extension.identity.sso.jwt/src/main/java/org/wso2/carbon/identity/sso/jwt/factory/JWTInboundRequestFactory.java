@@ -50,9 +50,9 @@ public class JWTInboundRequestFactory extends HttpIdentityRequestFactory {
      * Checks whether or not an incoming request hitting the "/identity" servlet should be handled by this
      * particular JWT IdentityRequest factory.
      *
-     * @param request  the request parameter coming from the servlet
-     * @param response the response parameter coming from the servlet
-     * @return true if the request is of a type which can be handled by this particular IdentityRequest factory
+     * @param request  the request parameter coming from the servlet.
+     * @param response the response parameter coming from the servlet.
+     * @return true if the request is of a type which can be handled by this particular IdentityRequest factory.
      */
     @Override
     public boolean canHandle(HttpServletRequest request, HttpServletResponse response) {
@@ -75,9 +75,9 @@ public class JWTInboundRequestFactory extends HttpIdentityRequestFactory {
     /**
      * Returns a new instance of the JWT IdentityRequest object, which will then be passed to the processor.
      *
-     * @param request  the HTTP request from the servlet
-     * @param response the response parameter coming from the servlet
-     * @return a builder for JWTInboundRequest, which is a subclass of JWTInboundRequest
+     * @param request  the HTTP request from the servlet.
+     * @param response the response parameter coming from the servlet.
+     * @return a builder for JWTInboundRequest, which is a subclass of JWTInboundRequest.
      * @throws FrameworkClientException
      */
     @Override

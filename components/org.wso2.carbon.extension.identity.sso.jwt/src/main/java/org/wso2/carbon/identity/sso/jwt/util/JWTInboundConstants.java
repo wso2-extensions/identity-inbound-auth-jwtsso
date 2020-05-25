@@ -18,7 +18,7 @@
 package org.wso2.carbon.identity.sso.jwt.util;
 
 /**
- * Class for maintaining the constant definitions
+ * Class for maintaining the constant definitions.
  */
 public class JWTInboundConstants {
 
@@ -28,7 +28,7 @@ public class JWTInboundConstants {
     public static final String FRIENDLY_NAME = "JWT SSO Configuration";
 
     /**
-     * Defines the SP configuration elements
+     * Defines the SP configuration elements.
      */
     public static class SPBasedConfigs {
 
@@ -46,7 +46,7 @@ public class JWTInboundConstants {
     }
 
     /**
-     * Defines the default values for the SP configurations
+     * Defines the default values for the SP configurations.
      */
     public static class SPDefaultValueConfigs {
 
@@ -57,7 +57,7 @@ public class JWTInboundConstants {
     }
 
     /**
-     * Defines name of the Token loggable configuration in identity_log_tokens.properties
+     * Defines name of the Token loggable configuration in identity_log_tokens.properties.
      */
     public static class IdentityTokens {
 
@@ -65,7 +65,7 @@ public class JWTInboundConstants {
     }
 
     /**
-     * Defines the error messages defined in Resources.properties file of the authentication endpoint
+     * Defines the error messages defined in Resources.properties file of the authentication endpoint.
      */
     public static class ErrorMessages {
 

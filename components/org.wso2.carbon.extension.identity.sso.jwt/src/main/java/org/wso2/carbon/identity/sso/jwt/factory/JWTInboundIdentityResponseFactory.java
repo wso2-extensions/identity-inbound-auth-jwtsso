@@ -54,8 +54,8 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
     /**
      * Checks if an incoming IdentityResponse from the framework can be handled by this particular factory.
      *
-     * @param identityResponse incoming IdentityResponse from the identity framework
-     * @return true if the incoming response is of the type handled by this factory
+     * @param identityResponse incoming IdentityResponse from the identity framework.
+     * @return true if the incoming response is of the type handled by this factory.
      */
     @Override
     public boolean canHandle(IdentityResponse identityResponse) {
@@ -67,8 +67,8 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
      * Converts the received IdentityResponse instance to an HTTPResponse so that it could be sent to the calling party.
      * This is where the logic for picking up and setting any parameters/headers/cookies etc is written.
      *
-     * @param identityResponse The IdentityResponse instance
-     * @return a corresponding HTTPResponse in the form of a builder, so that it could be built on demand
+     * @param identityResponse The IdentityResponse instance.
+     * @return a corresponding HTTPResponse in the form of a builder, so that it could be built on demand.
      */
     @Override
     public HttpIdentityResponse.HttpIdentityResponseBuilder create(IdentityResponse identityResponse) {
@@ -103,8 +103,8 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
     /**
      * Check if the response received is a logout response.
      *
-     * @param jwtToken The JWT token
-     * @return
+     * @param jwtToken The JWT token.
+     * @return True if the JWT token is empty (If it is a logout response)
      */
     private boolean isLogoutResponse(String jwtToken) {
 
@@ -119,11 +119,11 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
      * Check if the logout response received can be completed by ensuring if the Logout URL is configured.
      *
      * @param logoutUrl The logout URL to redirect to.
-     * @return
+     * @return True if the logout response is valid
      */
     private boolean isValidLogoutResponse(String logoutUrl) {
 
-        // Check if the Logout URL is configured in the SP configuration
+        // Check if the Logout URL is configured in the SP configuration.
         if (StringUtils.isNotBlank(logoutUrl)) {
             return true;
         }
@@ -131,11 +131,11 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
     }
 
     /**
-     * Builds the logout response
+     * Builds the logout response.
      *
-     * @param builder The response builder
-     * @param logoutUrl The logout URL
-     * @return
+     * @param builder   The response builder.
+     * @param logoutUrl The logout URL.
+     * @return The response builder after setting the required options.
      */
     private HttpIdentityResponse.HttpIdentityResponseBuilder buildLogoutResponse(
             HttpIdentityResponse.HttpIdentityResponseBuilder builder, String logoutUrl) {
@@ -152,12 +152,12 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
     }
 
     /**
-     * Builds the authenticated response
+     * Builds the authenticated response.
      *
-     * @param builder The response builder
-     * @param inboundResponse The inbound response
-     * @param jwtToken The JWT Token
-     * @return
+     * @param builder         The response builder.
+     * @param inboundResponse The inbound response.
+     * @param jwtToken        The JWT Token.
+     * @return The response builder after setting the required options.
      */
     private HttpIdentityResponse.HttpIdentityResponseBuilder buildAuthenticatedResponse(
             HttpIdentityResponse.HttpIdentityResponseBuilder builder, JWTInboundResponse inboundResponse,
@@ -208,11 +208,11 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
     }
 
     /**
-     * Builds the error response
+     * Builds the error response.
      *
-     * @param builder The response builder
-     * @param inboundResponse The inbound response
-     * @return
+     * @param builder         The response builder.
+     * @param inboundResponse The inbound response.
+     * @return The response builder after setting the required options.
      */
     private HttpIdentityResponse.HttpIdentityResponseBuilder buildErrorResponse(
             HttpIdentityResponse.HttpIdentityResponseBuilder builder, JWTInboundResponse inboundResponse) {

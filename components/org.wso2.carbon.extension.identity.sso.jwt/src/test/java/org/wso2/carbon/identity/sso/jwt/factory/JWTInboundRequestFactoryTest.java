@@ -30,6 +30,9 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.testng.Assert.assertEquals;
 
+/**
+ * Test class for the JWTInboundRequestFactory
+ */
 public class JWTInboundRequestFactoryTest {
 
     private JWTInboundRequestFactory jwtInboundRequestFactory;

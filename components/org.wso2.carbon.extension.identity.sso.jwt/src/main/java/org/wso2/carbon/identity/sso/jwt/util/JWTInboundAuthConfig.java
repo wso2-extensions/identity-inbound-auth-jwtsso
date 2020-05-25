@@ -24,7 +24,7 @@ import org.wso2.carbon.identity.application.mgt.AbstractInboundAuthenticatorConf
 
 /**
  * This class is used for populating the GUI elements for the JWT SSO inbound authenticator in the Identity Server's
- * SP configuration
+ * SP configuration.
  *
  * This class is extensible either by implementing the AbstractInboundAuthenticatorConfig or extending the
  * JWTInboundAuthConfig. The customized class should be defined under

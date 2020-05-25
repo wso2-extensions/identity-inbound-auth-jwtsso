@@ -28,6 +28,9 @@ import org.wso2.carbon.identity.sso.jwt.message.JWTInboundResponse;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.testng.Assert.assertEquals;
 
+/**
+ * Test class for the JWTInboundIdentityResponseFactory
+ */
 public class JWTInboundIdentityResponseFactoryTest {
 
     private JWTInboundIdentityResponseFactory jwtInboundIdentityResponseFactory;

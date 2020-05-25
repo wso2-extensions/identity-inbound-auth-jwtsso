@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.http.HttpService;
 import org.wso2.carbon.identity.application.authentication.framework.config.ConfigurationFacade;
-import org.wso2.carbon.identity.sso.jwt.message.JWTInboundResponse;
+import org.wso2.carbon.identity.sso.jwt.message.JWTInboundResponse.JWTInboundResponseBuilder;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
@@ -97,32 +97,33 @@ public class JWTInboundUtil {
     }
 
     /**
-     * The method used to build the client side error page to be redirected to retry.do
-     * Default status: authentication.error (Authentication Error!)
+     * The method used to build the client side error page to be redirected to retry.do.
+     * Default status: authentication.error (Authentication Error!).
      * Default message: something.went.wrong.during.authentication (Something went wrong during the authentication
-     * process. Please try signing in again.)
+     * process. Please try signing in again.).
      *
-     * @return
+     * @return The response builder after setting the endpoint URL to the retry.do page
      */
-    public static JWTInboundResponse.JWTInboundResponseBuilder sendToRetryPage() {
+    public static JWTInboundResponseBuilder sendToRetryPage() {
 
-        JWTInboundResponse.JWTInboundResponseBuilder respBuilder = new JWTInboundResponse.JWTInboundResponseBuilder();
+        JWTInboundResponseBuilder respBuilder = new JWTInboundResponseBuilder();
         respBuilder.setEndpointUrl(ConfigurationFacade.getInstance().getAuthenticationEndpointRetryURL());
         return respBuilder;
     }
 
     /**
-     * The method used to build the client side error page to be redirected to retry.do
+     * The method used to build the client side error page to be redirected to retry.do.
      *
      * @param status    The status of the message defined in Resources.properties file of the authentication endpoint.
-     *                  Ex: misconfiguration.error
+     *                  Ex: misconfiguration.error.
      * @param statusMsg The message defined in Resources.properties file of the authentication endpoint.
-     *                  Ex: something.went.wrong.contact.admin
-     * @return
+     *                  Ex: something.went.wrong.contact.admin.
+     * @return The response builder after setting the endpoint URL to the retry.do page along with other optional
+     * parameters
      */
-    public static JWTInboundResponse.JWTInboundResponseBuilder sendToRetryPage(String status, String statusMsg) {
+    public static JWTInboundResponseBuilder sendToRetryPage(String status, String statusMsg) {
 
-        JWTInboundResponse.JWTInboundResponseBuilder respBuilder = new JWTInboundResponse.JWTInboundResponseBuilder();
+        JWTInboundResponseBuilder respBuilder = new JWTInboundResponseBuilder();
         respBuilder.setParameters(new HashMap<String, String>() {
             {
                 put(JWTInboundConstants.ErrorMessages.ERROR_STATUS, status);

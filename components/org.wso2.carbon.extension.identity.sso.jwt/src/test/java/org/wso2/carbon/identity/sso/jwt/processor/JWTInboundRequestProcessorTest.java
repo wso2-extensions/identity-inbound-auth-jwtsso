@@ -35,6 +35,9 @@ import javax.servlet.http.HttpServletResponse;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.testng.Assert.assertEquals;
 
+/**
+ * Test class for the JWTInboundRequestProcessor
+ */
 public class JWTInboundRequestProcessorTest {
 
     private JWTInboundRequestProcessor jwtInboundRequestProcessor;

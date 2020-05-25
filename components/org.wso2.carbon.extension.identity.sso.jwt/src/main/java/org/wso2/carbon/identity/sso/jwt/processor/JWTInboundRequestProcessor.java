@@ -48,7 +48,7 @@ import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.sso.jwt.exception.JWTIdentityException;
 import org.wso2.carbon.identity.sso.jwt.message.JWTInboundRequest;
-import org.wso2.carbon.identity.sso.jwt.message.JWTInboundResponse;
+import org.wso2.carbon.identity.sso.jwt.message.JWTInboundResponse.JWTInboundResponseBuilder;
 import org.wso2.carbon.identity.sso.jwt.util.JWTInboundConstants;
 import org.wso2.carbon.identity.sso.jwt.util.JWTInboundUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -143,24 +143,23 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
      * request is coming new from the /identity servlet.
      *
      * @param identityRequest the request object (or a subclass of it), which can be coming either from the /identity
-     *                        servlet or from the framework after authentication)
+     *                        servlet or from the framework after authentication).
      * @return an instance of IdentityResponse which may be further customised (similar to how an IdentityRequest can
-     * be customised)
+     * be customised).
      * @throws FrameworkException if any abnormal conditions are encountered by the framework during authentication.
      */
     public IdentityResponse.IdentityResponseBuilder process(IdentityRequest identityRequest) throws FrameworkException {
 
         IdentityMessageContext messageContext = new IdentityMessageContext<>(identityRequest,
                 new HashMap<String, String>());
-        JWTInboundResponse.JWTInboundResponseBuilder respBuilder =
-                new JWTInboundResponse.JWTInboundResponseBuilder(messageContext);
+        JWTInboundResponseBuilder respBuilder = new JWTInboundResponseBuilder(messageContext);
 
         String sessionId = identityRequest.getParameter(InboundConstants.RequestProcessor.CONTEXT_KEY);
         String logoutRequestPath = JWTInboundConstants.BASE_PATH + JWTInboundConstants.LOGOUT_PATH;
 
         if (isRelyingPartyExist(identityRequest)) {
 
-            // Validate endpoint URL
+            // Validate endpoint URL.
             if (!validateEndpointUrl(identityRequest)) {
                 String msg = "Mandatory configuration: Endpoint API is not configured.";
                 log.error(msg, new JWTIdentityException(msg));
@@ -168,7 +167,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                         JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
             }
 
-            // Validate JWS Algorithm
+            // Validate JWS Algorithm.
             if (!validateJwsAlgorithm(identityRequest)) {
                 String msg = "Invalid JWT Signing Algorithm configured.";
                 log.error(msg, new JWTIdentityException(msg));
@@ -176,7 +175,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                         JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
             }
 
-            // Set and Validate Redirect URL
+            // Set and Validate Redirect URL.
             if (!handleRedirectUrl(identityRequest)) {
                 log.error("Invalid redirect URL: " + neutralize(this.redirectUrl) +
                         " in the authentication request from the relying party: " + neutralize(this.relyingParty));
@@ -184,7 +183,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                         JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
             }
 
-            // Set and Validate Error URL
+            // Set and Validate Error URL.
             if (!handleErrorUrl(identityRequest)) {
                 log.error("Invalid error URL: " + neutralize(this.errorUrl) +
                         " in the authentication request from the relying party: " + neutralize(this.relyingParty));
@@ -220,10 +219,10 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     }
 
     /**
-     * Validates the endpoint URL
+     * Validates the endpoint URL.
      *
-     * @param identityRequest The identity request
-     * @return
+     * @param identityRequest The identity request.
+     * @return True if the endpoint URL is configured
      */
     private boolean validateEndpointUrl(IdentityRequest identityRequest) {
 
@@ -238,17 +237,17 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     }
 
     /**
-     * Validates the JWS algorithm
+     * Validates the JWS algorithm.
      *
-     * @param identityRequest The identity request
-     * @return
+     * @param identityRequest The identity request.
+     * @return True if the JWS algorithm configured is supported
      */
     private boolean validateJwsAlgorithm(IdentityRequest identityRequest) {
 
         setJWSAlgorithm(getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.JWS_ALGORITHM));
         if (this.jwsAlgorithm != null) {
             if (log.isDebugEnabled()) {
-                log.debug("Setting the JWS Algorithm");
+                log.debug("Setting the JWS Algorithm: " + neutralize(this.jwsAlgorithm.getName()));
             }
             return true;
         }
@@ -258,26 +257,27 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     /**
      * Setting the redirect URL parameter and validating against the regex configured in the SP configuration.
      *
-     * @param identityRequest The identity request
+     * @param identityRequest The identity request.
      * @return True if the redirect URL is valid or not provided. False if the validation failed against the regex.
      */
     private boolean handleRedirectUrl(IdentityRequest identityRequest) {
 
-        // Set Redirect URL
+        // Set Redirect URL.
         String redirectUrlParamName = JWTInboundConstants.SPDefaultValueConfigs.REDIRECT_URL_DEFAULT_PARAM_VALUE;
         if (StringUtils.isNotBlank(getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.
                 REDIRECT_URL_PARAM_NAME))) {
-            // Get the redirect URL parameter name from the SP config if it is configured
+            // Get the redirect URL parameter name from the SP config if it is configured.
             redirectUrlParamName = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.
                     REDIRECT_URL_PARAM_NAME);
         }
         this.redirectUrl = identityRequest.getParameter(redirectUrlParamName);
         if (log.isDebugEnabled()) {
             log.debug("Redirect URL parameter name: " + neutralize(redirectUrlParamName) +
-                    "\nRedirect URL: " + neutralize(this.redirectUrl));
+                    "\nRedirect URL: " + neutralize(this.redirectUrl) + " for the Relying Party: " +
+                    neutralize(this.relyingParty));
         }
 
-        // Validate Redirect URL
+        // Validate Redirect URL.
         String redirectUrlRegex =
                 getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.REDIRECT_URL_REGEX);
         if (StringUtils.isNotBlank(this.redirectUrl)) {
@@ -285,25 +285,25 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                 if (log.isDebugEnabled()) {
                     log.debug("Setting the Redirect URL: " + neutralize(this.redirectUrl));
                 }
-                // Valid Redirect URL
+                // Valid Redirect URL.
                 return true;
             }
-            // Invalid Redirect URL
+            // Invalid Redirect URL.
             return false;
         }
-        // Redirect URL not provided
+        // Redirect URL not provided.
         return true;
     }
 
     /**
      * Setting the error URL parameter and validating against the regex configured in the SP configuration.
      *
-     * @param identityRequest The identity request
+     * @param identityRequest The identity request.
      * @return True if the error URL is valid or not provided. False if the validation failed against the regex.
      */
     private boolean handleErrorUrl(IdentityRequest identityRequest) {
 
-        // Set Error URL
+        // Set Error URL.
         String errorUrlParamName = JWTInboundConstants.SPDefaultValueConfigs.ERROR_URL_PARAM_DEFAULT_VALUE;
         if (StringUtils.isNotBlank(getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.
                 ERROR_URL_PARAM_NAME))) {
@@ -314,10 +314,10 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         if (log.isDebugEnabled()) {
             log.debug(
                     "Error URL parameter name: " + neutralize(errorUrlParamName) + "\nError URL: " +
-                            neutralize(this.errorUrl));
+                            neutralize(this.errorUrl) + " for the Relying Party: " + neutralize(this.relyingParty));
         }
 
-        // Validate Error URL
+        // Validate Error URL.
         String errorUrlRegex = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.
                 ERROR_URL_REGEX);
         if (StringUtils.isNotBlank(this.errorUrl)) {
@@ -325,28 +325,28 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                 if (log.isDebugEnabled()) {
                     log.debug("Setting the Error URL: " + neutralize(this.errorUrl));
                 }
-                // Valid Error URL
+                // Valid Error URL.
                 return true;
             }
-            // Invalid Error URL
+            // Invalid Error URL.
             return false;
         }
-        // Error URL not provided
+        // Error URL not provided.
         return true;
     }
 
     /**
      * Handles the response coming from the framework and decides on whether the response is an authenticated
-     * response or the logout response
+     * response or the logout response.
      *
-     * @param messageContext  The message context
-     * @param identityRequest The identity request
-     * @param respBuilder     The response builder
-     * @return
+     * @param messageContext  The message context.
+     * @param identityRequest The identity request.
+     * @param respBuilder     The response builder.
+     * @return The response builder after setting the required options based on the response type
      */
-    private JWTInboundResponse.JWTInboundResponseBuilder handleFrameworkResponse(
-            IdentityMessageContext messageContext, IdentityRequest identityRequest,
-            JWTInboundResponse.JWTInboundResponseBuilder respBuilder) {
+    private JWTInboundResponseBuilder handleFrameworkResponse(IdentityMessageContext messageContext,
+                                                              IdentityRequest identityRequest,
+                                                              JWTInboundResponseBuilder respBuilder) {
 
         AuthenticationResult authenticationResult = processResponseFromFrameworkLogin(messageContext,
                 identityRequest);
@@ -357,7 +357,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             // Authenticated session - response coming from the framework after authentication.
             respBuilder = handleAuthenticationResult(identityRequest, authenticationResult, respBuilder);
         } else {
-            // Non-authenticated session - response coming after logged out - redirecting the user to Logout URL
+            // Non-authenticated session - response coming after logged out - redirecting the user to Logout URL.
             respBuilder = handleLogoutResult(identityRequest, respBuilder);
         }
         return respBuilder;
@@ -366,14 +366,14 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     /**
      * Handles the response coming from the framework after authentication.
      *
-     * @param identityRequest      The identity request
-     * @param authenticationResult The authentication result
-     * @param respBuilder          The response builder
-     * @return The response builder after setting the required options
+     * @param identityRequest      The identity request.
+     * @param authenticationResult The authentication result.
+     * @param respBuilder          The response builder.
+     * @return The response builder after setting the required options.
      */
-    private JWTInboundResponse.JWTInboundResponseBuilder handleAuthenticationResult(
-            IdentityRequest identityRequest, AuthenticationResult authenticationResult,
-            JWTInboundResponse.JWTInboundResponseBuilder respBuilder) {
+    private JWTInboundResponseBuilder handleAuthenticationResult(IdentityRequest identityRequest,
+                                                                 AuthenticationResult authenticationResult,
+                                                                 JWTInboundResponseBuilder respBuilder) {
 
         if (log.isDebugEnabled()) {
             log.debug("Authenticated session exists. Treating as a request coming after the " +
@@ -384,7 +384,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             log.debug("Processing the request for the user: " + neutralize(userName));
         }
 
-        // Validate API key and Generate JWT Token
+        // Validate API key and Generate JWT Token.
         Map<ClaimMapping, String> userAttributes = authenticationResult.getSubject().getUserAttributes();
         String apiKey = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.API_KEY);
         if (StringUtils.isNotBlank(apiKey)) {
@@ -405,7 +405,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                     JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
         }
 
-        // Set endpoint URL
+        // Set endpoint URL.
         respBuilder.setEndpointUrl(this.endpointUrl);
 
         // Set query parameter value: Redirect URL - If provided.
@@ -423,7 +423,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                 ERROR_URL_PARAM_NAME);
         if (log.isDebugEnabled()) {
             log.debug(
-                    "Setting the query parameter names.\nJWT query parameter: " + neutralize(jwtParamName) +
+                    "Setting the query parameter names for the Relying Party: " + neutralize(this.relyingParty) +
+                            "\nJWT query parameter: " + neutralize(jwtParamName) +
                             "\nRedirect URL query parameter: " + neutralize(redirectUrlParamName) +
                             "\nError URL query parameter: " + neutralize(errorUrlParamName));
         }
@@ -437,20 +438,21 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     /**
      * Handles the response coming after logged out.
      *
-     * @param identityRequest The identity request
-     * @param respBuilder     The response builder
-     * @return The response builder after setting the required options
+     * @param identityRequest The identity request.
+     * @param respBuilder     The response builder.
+     * @return The response builder after setting the required options.
      */
-    private JWTInboundResponse.JWTInboundResponseBuilder handleLogoutResult(
-            IdentityRequest identityRequest, JWTInboundResponse.JWTInboundResponseBuilder respBuilder) {
+    private JWTInboundResponseBuilder handleLogoutResult(IdentityRequest identityRequest,
+                                                         JWTInboundResponseBuilder respBuilder) {
 
         String logoutUrl = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.LOGOUT_URL);
         if (log.isDebugEnabled()) {
             log.debug(
                     "Non-authenticated session. Treating as the request coming after logout.\n" +
-                            "Setting the logout URL: " + neutralize(logoutUrl));
+                            "Setting the logout URL: " + neutralize(logoutUrl) + " for the Relying Party: " +
+                            neutralize(this.relyingParty));
         }
-        // Validate and set Logout URL
+        // Validate and set Logout URL.
         if (StringUtils.isNotBlank(logoutUrl)) {
             respBuilder.setToken(null);
             respBuilder.setLogoutUrl(logoutUrl);
@@ -466,7 +468,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     private String getPropertyValue(IdentityRequest request, String property) {
 
         String propertyValue = null;
-        Map<String, Property> props = getInboundAuthenticatorPropertyArray(request);
+        Map<String, Property> props = getInboundAuthenticatorPropertyArray(request.getTenantDomain());
         for (Object obj : props.entrySet()) {
             Map.Entry pair = (Map.Entry) obj;
             if (property.equals(pair.getKey())) {
@@ -481,18 +483,17 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
      * This method is used for retrieving the values for the properties from JWTInboundAuthConfig which will
      * have been set in the Identity Server's Service Provider settings.
      *
-     * @param request the identity request object
-     * @return a map of available properties and their values
+     * @param tenantDomain The tenant domain
+     * @return a map of available properties and their values.
      */
-    private Map<String, Property> getInboundAuthenticatorPropertyArray(IdentityRequest request) {
+    private Map<String, Property> getInboundAuthenticatorPropertyArray(String tenantDomain) {
 
         try {
             Map<String, Property> properties = new HashMap<>();
             if (StringUtils.isNotBlank(this.relyingParty) && StringUtils.isNotBlank(this.getName())) {
                 ApplicationManagementService appInfo = ApplicationManagementService.getInstance();
                 ServiceProvider application =
-                        appInfo.getServiceProviderByClientId(this.relyingParty, this.getName(),
-                                request.getTenantDomain());
+                        appInfo.getServiceProviderByClientId(this.relyingParty, this.getName(), tenantDomain);
                 for (InboundAuthenticationRequestConfig authenticationRequestConfig : application
                         .getInboundAuthenticationConfig().getInboundAuthenticationRequestConfigs()) {
                     if (StringUtils.equals(authenticationRequestConfig.getInboundAuthType(), getName())
@@ -512,8 +513,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     /**
      * This method is used to validate if the provided relying party is exist as an SP.
      *
-     * @param request The Identity Request
-     * @return true if relying party exist
+     * @param request The Identity Request.
+     * @return true if relying party exist.
      */
     private boolean isRelyingPartyExist(IdentityRequest request) {
 
@@ -539,12 +540,12 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     }
 
     /**
-     * This method is used to generate a signed JWT token
+     * This method is used to generate a signed JWT token.
      *
-     * @param identityRequest the IdentityRequest
-     * @param userName        the username to define the subject of the JWT token
-     * @param userAttributes  the user claims to generate the JWT token
-     * @return the signed JWT token
+     * @param identityRequest the IdentityRequest.
+     * @param userName        the username to define the subject of the JWT token.
+     * @param userAttributes  the user claims to generate the JWT token.
+     * @return the signed JWT token.
      */
     private String generateJWTToken(IdentityRequest identityRequest, String apiKey, String userName,
                                     Map<ClaimMapping, String> userAttributes) throws JWTIdentityException {
@@ -606,10 +607,10 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     }
 
     /**
-     * This method is used to validate a string against a regex
+     * This method is used to validate a string against a regex.
      *
-     * @param regex The regex
-     * @param input The string to be validated against the regex
+     * @param regex The regex.
+     * @param input The string to be validated against the regex.
      * @return True if the validation is success.
      */
     public boolean validateRegexInput(String regex, String input) {
@@ -649,14 +650,17 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     }
 
     /**
-     * The method used to get the JWS Algorithm
+     * The method used to get the JWS Algorithm.
      *
-     * @param algorithm The algorithm
+     * @param algorithm The algorithm.
      */
     private void setJWSAlgorithm(String algorithm) {
 
+        if (log.isDebugEnabled()) {
+            log.debug("Algorithm provided: " + neutralize(algorithm));
+        }
         if (StringUtils.isBlank(algorithm) || algorithm.equals("HS256")) {
-            // Set default value as HS256
+            // Set default value as HS256.
             this.jwsAlgorithm = JWSAlgorithm.HS256;
         } else if (algorithm.equals("HS384")) {
             this.jwsAlgorithm = JWSAlgorithm.HS384;
@@ -664,6 +668,9 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             this.jwsAlgorithm = JWSAlgorithm.HS512;
         } else {
             this.jwsAlgorithm = null;
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Algorithm set to : " + neutralize(this.jwsAlgorithm.getName()));
         }
     }
 }
