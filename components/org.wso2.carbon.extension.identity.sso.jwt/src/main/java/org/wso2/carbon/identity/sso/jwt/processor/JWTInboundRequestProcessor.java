@@ -89,6 +89,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     private String redirectUrl;
     private String errorUrl;
     private String endpointUrl;
+    private String apiKey;
     private JWSAlgorithm jwsAlgorithm;
 
     public JWTInboundRequestProcessor(AbstractInboundAuthenticatorConfig jwtInboundAuthConfig) {
@@ -175,6 +176,14 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                         JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
             }
 
+            // Validate API Key
+            if (!validateApiKey(identityRequest)) {
+                String msg = "Mandatory configuration: API Key is not configured.";
+                log.error(msg, new JWTIdentityException(msg));
+                return JWTInboundUtil.sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
+                        JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
+            }
+
             // Set and Validate Redirect URL.
             if (!handleRedirectUrl(identityRequest)) {
                 log.error("Invalid redirect URL: " + neutralize(this.redirectUrl) +
@@ -249,6 +258,15 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             if (log.isDebugEnabled()) {
                 log.debug("Setting the JWS Algorithm: " + neutralize(this.jwsAlgorithm.getName()));
             }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean validateApiKey(IdentityRequest identityRequest) {
+
+        this.apiKey = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.API_KEY);
+        if (StringUtils.isNotBlank(this.apiKey)) {
             return true;
         }
         return false;
@@ -386,23 +404,15 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
 
         // Validate API key and Generate JWT Token.
         Map<ClaimMapping, String> userAttributes = authenticationResult.getSubject().getUserAttributes();
-        String apiKey = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.API_KEY);
-        if (StringUtils.isNotBlank(apiKey)) {
-            try {
-                respBuilder.setToken(generateJWTToken(identityRequest, apiKey, userName,
-                        userAttributes));
-            } catch (JWTIdentityException e) {
-                String msg = "Error while generating JWT Token";
-                log.error(msg, e);
-                return JWTInboundUtil
-                        .sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
-                                JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
-            }
-        } else {
-            String msg = "Mandatory configuration: API Key is not configured.";
-            log.error(msg, new JWTIdentityException(msg));
-            return JWTInboundUtil.sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
-                    JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
+        try {
+            respBuilder.setToken(generateJWTToken(identityRequest, this.apiKey, userName,
+                    userAttributes));
+        } catch (JWTIdentityException e) {
+            String msg = "Error while generating JWT Token";
+            log.error(msg, e);
+            return JWTInboundUtil
+                    .sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
+                            JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
         }
 
         // Set endpoint URL.
@@ -423,7 +433,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                 ERROR_URL_PARAM_NAME);
         if (log.isDebugEnabled()) {
             log.debug(
-                    "Setting the query parameter names for the Relying Party: " + neutralize(this.relyingParty) +
+                    "Setting the query parameter names for the Relying Party: " + neutralize(this.relyingParty) + ". " +
+                            "Default query parameter names will be used if the values are not set." +
                             "\nJWT query parameter: " + neutralize(jwtParamName) +
                             "\nRedirect URL query parameter: " + neutralize(redirectUrlParamName) +
                             "\nError URL query parameter: " + neutralize(errorUrlParamName));
