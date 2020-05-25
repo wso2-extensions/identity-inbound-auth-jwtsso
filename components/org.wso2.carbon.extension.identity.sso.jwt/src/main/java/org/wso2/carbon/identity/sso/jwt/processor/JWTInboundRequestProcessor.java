@@ -132,7 +132,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         if (identityRequest instanceof JWTInboundRequest) {
             this.relyingParty = identityRequest.getParameter(JWTInboundConstants.SP_ID);
             if (log.isDebugEnabled()) {
-                log.debug("Relying party: " + neutralize(this.relyingParty));
+                log.debug("Relying party: " + JWTInboundUtil.neutralize(this.relyingParty));
             }
         }
         return StringUtils.isNotBlank(this.relyingParty);
@@ -186,16 +186,18 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
 
             // Set and Validate Redirect URL.
             if (!handleRedirectUrl(identityRequest)) {
-                log.error("Invalid redirect URL: " + neutralize(this.redirectUrl) +
-                        " in the authentication request from the relying party: " + neutralize(this.relyingParty));
+                log.error("Invalid redirect URL: " + JWTInboundUtil.neutralize(this.redirectUrl) +
+                        " in the authentication request from the relying party: " +
+                        JWTInboundUtil.neutralize(this.relyingParty));
                 return JWTInboundUtil.sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
                         JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
             }
 
             // Set and Validate Error URL.
             if (!handleErrorUrl(identityRequest)) {
-                log.error("Invalid error URL: " + neutralize(this.errorUrl) +
-                        " in the authentication request from the relying party: " + neutralize(this.relyingParty));
+                log.error("Invalid error URL: " + JWTInboundUtil.neutralize(this.errorUrl) +
+                        " in the authentication request from the relying party: " +
+                        JWTInboundUtil.neutralize(this.relyingParty));
                 return JWTInboundUtil
                         .sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
                                 JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
@@ -219,8 +221,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                 return buildResponseForFrameworkLogin(messageContext);
             }
         } else {
-            String msg = "A Service Provider with the Relying Party '" + neutralize(this.relyingParty) + "' is not " +
-                    "registered. Service Provider should be registered in advance.";
+            String msg = "A Service Provider with the Relying Party '" + JWTInboundUtil.neutralize(this.relyingParty) +
+                    "' is not registered. Service Provider should be registered in advance.";
             log.error(msg, new JWTIdentityException(msg));
             return JWTInboundUtil.sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
                     JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
@@ -238,7 +240,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         this.endpointUrl = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.SITE_API_URL);
         if (StringUtils.isNotBlank(this.endpointUrl)) {
             if (log.isDebugEnabled()) {
-                log.debug("Setting the endpoint URL: " + neutralize(this.endpointUrl));
+                log.debug("Setting the endpoint URL: " + JWTInboundUtil.neutralize(this.endpointUrl));
             }
             return true;
         }
@@ -256,7 +258,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         setJWSAlgorithm(getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.JWS_ALGORITHM));
         if (this.jwsAlgorithm != null) {
             if (log.isDebugEnabled()) {
-                log.debug("Setting the JWS Algorithm: " + neutralize(this.jwsAlgorithm.getName()));
+                log.debug("Setting the JWS Algorithm: " + JWTInboundUtil.neutralize(this.jwsAlgorithm.getName()));
             }
             return true;
         }
@@ -290,9 +292,9 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         }
         this.redirectUrl = identityRequest.getParameter(redirectUrlParamName);
         if (log.isDebugEnabled()) {
-            log.debug("Redirect URL parameter name: " + neutralize(redirectUrlParamName) +
-                    "\nRedirect URL: " + neutralize(this.redirectUrl) + " for the Relying Party: " +
-                    neutralize(this.relyingParty));
+            log.debug("Redirect URL parameter name: " + JWTInboundUtil.neutralize(redirectUrlParamName) +
+                    "\nRedirect URL: " + JWTInboundUtil.neutralize(this.redirectUrl) + " for the Relying Party: " +
+                    JWTInboundUtil.neutralize(this.relyingParty));
         }
 
         // Validate Redirect URL.
@@ -301,7 +303,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         if (StringUtils.isNotBlank(this.redirectUrl)) {
             if (validateRegexInput(redirectUrlRegex, this.redirectUrl)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Setting the Redirect URL: " + neutralize(this.redirectUrl));
+                    log.debug("Setting the Redirect URL: " + JWTInboundUtil.neutralize(this.redirectUrl));
                 }
                 // Valid Redirect URL.
                 return true;
@@ -331,8 +333,9 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         this.errorUrl = identityRequest.getParameter(errorUrlParamName);
         if (log.isDebugEnabled()) {
             log.debug(
-                    "Error URL parameter name: " + neutralize(errorUrlParamName) + "\nError URL: " +
-                            neutralize(this.errorUrl) + " for the Relying Party: " + neutralize(this.relyingParty));
+                    "Error URL parameter name: " + JWTInboundUtil.neutralize(errorUrlParamName) + "\nError URL: " +
+                            JWTInboundUtil.neutralize(this.errorUrl) + " for the Relying Party: " +
+                            JWTInboundUtil.neutralize(this.relyingParty));
         }
 
         // Validate Error URL.
@@ -341,7 +344,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         if (StringUtils.isNotBlank(this.errorUrl)) {
             if (validateRegexInput(errorUrlRegex, this.errorUrl)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Setting the Error URL: " + neutralize(this.errorUrl));
+                    log.debug("Setting the Error URL: " + JWTInboundUtil.neutralize(this.errorUrl));
                 }
                 // Valid Error URL.
                 return true;
@@ -399,7 +402,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         }
         String userName = authenticationResult.getSubject().getUserName();
         if (log.isDebugEnabled()) {
-            log.debug("Processing the request for the user: " + neutralize(userName));
+            log.debug("Processing the request for the user: " + JWTInboundUtil.neutralize(userName));
         }
 
         // Validate API key and Generate JWT Token.
@@ -433,11 +436,12 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                 ERROR_URL_PARAM_NAME);
         if (log.isDebugEnabled()) {
             log.debug(
-                    "Setting the query parameter names for the Relying Party: " + neutralize(this.relyingParty) + ". " +
-                            "Default query parameter names will be used if the values are not set." +
-                            "\nJWT query parameter: " + neutralize(jwtParamName) +
-                            "\nRedirect URL query parameter: " + neutralize(redirectUrlParamName) +
-                            "\nError URL query parameter: " + neutralize(errorUrlParamName));
+                    "Setting the query parameter names for the Relying Party: " +
+                            JWTInboundUtil.neutralize(this.relyingParty) +
+                            ". Default query parameter names will be used if the values are not set." +
+                            "\nJWT query parameter: " + JWTInboundUtil.neutralize(jwtParamName) +
+                            "\nRedirect URL query parameter: " + JWTInboundUtil.neutralize(redirectUrlParamName) +
+                            "\nError URL query parameter: " + JWTInboundUtil.neutralize(errorUrlParamName));
         }
         respBuilder.setJwtParamName(jwtParamName);
         respBuilder.setRedirectUrlParamName(redirectUrlParamName);
@@ -459,9 +463,9 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         String logoutUrl = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.LOGOUT_URL);
         if (log.isDebugEnabled()) {
             log.debug(
-                    "Non-authenticated session. Treating as the request coming after logout.\n" +
-                            "Setting the logout URL: " + neutralize(logoutUrl) + " for the Relying Party: " +
-                            neutralize(this.relyingParty));
+                    "Non-authenticated session. Treating as the request coming after logout." +
+                            "\nSetting the logout URL: " + JWTInboundUtil.neutralize(logoutUrl) +
+                            " for the Relying Party: " + JWTInboundUtil.neutralize(this.relyingParty));
         }
         // Validate and set Logout URL.
         if (StringUtils.isNotBlank(logoutUrl)) {
@@ -567,7 +571,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             // Generate JWT Claims.
             JWTClaimsSet.Builder claimsSet = new JWTClaimsSet.Builder();
             if (log.isDebugEnabled()) {
-                log.debug("Generating JWT token for subject: " + neutralize(userName));
+                log.debug("Generating JWT token for subject: " + JWTInboundUtil.neutralize(userName));
             }
             claimsSet.subject(userName);
             claimsSet.jwtID(UUID.randomUUID().toString());
@@ -592,9 +596,9 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                     String claimValue = entry.getValue();
                     claimsSet.claim(remoteClaimUri, claimValue);
                     if (log.isDebugEnabled()) {
-                        log.debug("Adding user claim for local URI: " + neutralize(localClaimUri) +
-                                " with remote URI: " + neutralize(remoteClaimUri) + " and the value: " +
-                                neutralize(claimValue));
+                        log.debug("Adding user claim for local URI: " + JWTInboundUtil.neutralize(localClaimUri) +
+                                " with remote URI: " + JWTInboundUtil.neutralize(remoteClaimUri) + " and the value: " +
+                                JWTInboundUtil.neutralize(claimValue));
                     }
                 }
             }
@@ -605,7 +609,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
 
             String jwtToken = signedJWT.serialize();
             if (log.isDebugEnabled() && IdentityUtil.isTokenLoggable(JWTInboundConstants.IdentityTokens.JWT_TOKEN)) {
-                log.debug("JWT token generated: " + neutralize(jwtToken));
+                log.debug("JWT token generated: " + JWTInboundUtil.neutralize(jwtToken));
             }
             return jwtToken;
         } catch (NumberFormatException e) {
@@ -628,8 +632,9 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
 
         if (StringUtils.isNotBlank(regex) && StringUtils.isNotBlank((input))) {
             if (log.isDebugEnabled()) {
-                log.debug("Validating regex for the input: " + neutralize(input) + " against the regex: " +
-                        neutralize(regex));
+                log.debug(
+                        "Validating regex for the input: " + JWTInboundUtil.neutralize(input) + " against the regex: " +
+                                JWTInboundUtil.neutralize(regex));
             }
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(input);
@@ -641,23 +646,9 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             }
         }
         if (log.isDebugEnabled()) {
-            log.debug("Regex validation failed for the input: " + neutralize(input));
+            log.debug("Regex validation failed for the input: " + JWTInboundUtil.neutralize(input));
         }
         return false;
-    }
-
-    /**
-     * The method used to prevent CRLF_INJECTION_LOGS. It neutralizes the given input.
-     *
-     * @param input The input string to be neutralized.
-     * @return neutralized output.
-     */
-    private String neutralize(String input) {
-
-        if (StringUtils.isNotBlank(input)) {
-            return input.replaceAll("[\r\n]", "");
-        }
-        return null;
     }
 
     /**
@@ -668,7 +659,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     private void setJWSAlgorithm(String algorithm) {
 
         if (log.isDebugEnabled()) {
-            log.debug("Algorithm provided: " + neutralize(algorithm));
+            log.debug("Algorithm provided: " + JWTInboundUtil.neutralize(algorithm));
         }
         if (StringUtils.isBlank(algorithm) || algorithm.equals("HS256")) {
             // Set default value as HS256.
@@ -681,7 +672,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             this.jwsAlgorithm = null;
         }
         if (log.isDebugEnabled()) {
-            log.debug("Algorithm set to : " + neutralize(this.jwsAlgorithm.getName()));
+            log.debug("Algorithm set to : " + JWTInboundUtil.neutralize(this.jwsAlgorithm.getName()));
         }
     }
 }
