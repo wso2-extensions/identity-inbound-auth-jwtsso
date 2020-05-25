@@ -85,6 +85,7 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                 // Successful logout scenario.
                 if (isValidLogoutResponse(logoutUrl)) {
                     // Successful logout and the Logout URL is configured, hence redirecting to Logout URL.
+                    // Token not set and the logout URL is configured.
                     if (log.isDebugEnabled()) {
                         log.debug("Logout URL: " + JWTInboundUtil.neutralize(logoutUrl) +
                                 " provided and the token is set" +
@@ -95,6 +96,7 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                     builder.setRedirectURL(logoutUrl);
                 } else {
                     // Successful logout but the Logout URL is not configured, hence redirecting to error page.
+                    // The token is not set and the logout URL is not configured.
                     String clientErrorPage = inboundResponse.getEndpointUrl();
                     if (StringUtils.isNotBlank(clientErrorPage)) {
                         builder.setStatusCode(HttpServletResponse.SC_FOUND);
@@ -108,7 +110,13 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                             builder.setParameters(parameters);
                         }
                     } else {
-                        builder.setStatusCode(HttpServletResponse.SC_UNAUTHORIZED);
+                        // This else part will not be reached in the usual flow unless anyone bypassed the flow.
+                        // This will be reached if the token is set to null, logout URL is not configured and the
+                        // client error page is not defined. But anyway, if the token is not set and the logout URL
+                        // is not defined, the client error page will be defined in the handleLogoutResult() method in
+                        // the JWTInboundRequestProcessor class and the defined error page will be returned through
+                        // above if scope.
+                        builder.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
                     }
                 }
             } else {
