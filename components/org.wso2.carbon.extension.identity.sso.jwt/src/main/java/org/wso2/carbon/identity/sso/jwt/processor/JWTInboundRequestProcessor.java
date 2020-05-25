@@ -161,12 +161,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         if (isRelyingPartyExist(identityRequest)) {
 
             // Validate endpoint URL
-            this.endpointUrl = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.SITE_API_URL);
-            if (StringUtils.isNotBlank(this.endpointUrl)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Setting the endpoint URL: " + neutralize(this.endpointUrl));
-                }
-            } else {
+            if (!validateEndpointUrl(identityRequest)) {
                 String msg = "Mandatory configuration: Endpoint API is not configured.";
                 log.error(msg, new JWTIdentityException(msg));
                 return JWTInboundUtil.sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
@@ -174,12 +169,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             }
 
             // Validate JWS Algorithm
-            setJWSAlgorithm(getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.JWS_ALGORITHM));
-            if (this.jwsAlgorithm != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Setting the JWS Algorithm");
-                }
-            } else {
+            if (!validateJwsAlgorithm(identityRequest)) {
                 String msg = "Invalid JWT Signing Algorithm configured.";
                 log.error(msg, new JWTIdentityException(msg));
                 return JWTInboundUtil.sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
@@ -212,19 +202,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
                 return buildResponseForFrameworkLogout(messageContext);
             } else if (StringUtils.isNotBlank(sessionId)) {
                 // A session exists - response coming from the framework after authentication or after logged out.
-                AuthenticationResult authenticationResult = processResponseFromFrameworkLogin(messageContext,
-                        identityRequest);
-                if (log.isDebugEnabled()) {
-                    log.debug("Session ID exists.");
-                }
-                if (authenticationResult != null && authenticationResult.isAuthenticated()) {
-                    // Authenticated session - response coming from the framework after authentication.
-                    respBuilder = handleAuthenticationResult(identityRequest, authenticationResult, respBuilder);
-                } else {
-                    // Non-authenticated session - response coming after logged out - redirecting the user to Logout URL
-                    respBuilder = handleLogoutResult(identityRequest, respBuilder);
-                }
-                return respBuilder;
+                return handleFrameworkResponse(messageContext, identityRequest, respBuilder);
             } else {
                 // No session exists - send the request to the identity framework.
                 if (log.isDebugEnabled()) {
@@ -239,6 +217,42 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             return JWTInboundUtil.sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
                     JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
         }
+    }
+
+    /**
+     * Validates the endpoint URL
+     *
+     * @param identityRequest The identity request
+     * @return
+     */
+    private boolean validateEndpointUrl(IdentityRequest identityRequest) {
+
+        this.endpointUrl = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.SITE_API_URL);
+        if (StringUtils.isNotBlank(this.endpointUrl)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Setting the endpoint URL: " + neutralize(this.endpointUrl));
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Validates the JWS algorithm
+     *
+     * @param identityRequest The identity request
+     * @return
+     */
+    private boolean validateJwsAlgorithm(IdentityRequest identityRequest) {
+
+        setJWSAlgorithm(getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.JWS_ALGORITHM));
+        if (this.jwsAlgorithm != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Setting the JWS Algorithm");
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -319,6 +333,34 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         }
         // Error URL not provided
         return true;
+    }
+
+    /**
+     * Handles the response coming from the framework and decides on whether the response is an authenticated
+     * response or the logout response
+     *
+     * @param messageContext  The message context
+     * @param identityRequest The identity request
+     * @param respBuilder     The response builder
+     * @return
+     */
+    private JWTInboundResponse.JWTInboundResponseBuilder handleFrameworkResponse(
+            IdentityMessageContext messageContext, IdentityRequest identityRequest,
+            JWTInboundResponse.JWTInboundResponseBuilder respBuilder) {
+
+        AuthenticationResult authenticationResult = processResponseFromFrameworkLogin(messageContext,
+                identityRequest);
+        if (log.isDebugEnabled()) {
+            log.debug("Session ID exists.");
+        }
+        if (authenticationResult != null && authenticationResult.isAuthenticated()) {
+            // Authenticated session - response coming from the framework after authentication.
+            respBuilder = handleAuthenticationResult(identityRequest, authenticationResult, respBuilder);
+        } else {
+            // Non-authenticated session - response coming after logged out - redirecting the user to Logout URL
+            respBuilder = handleLogoutResult(identityRequest, respBuilder);
+        }
+        return respBuilder;
     }
 
     /**

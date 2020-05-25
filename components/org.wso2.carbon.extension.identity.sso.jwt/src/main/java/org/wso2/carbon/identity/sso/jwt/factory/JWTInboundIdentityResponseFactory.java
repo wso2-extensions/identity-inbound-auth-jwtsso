@@ -86,82 +86,15 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
                 if (isValidLogoutResponse(logoutUrl)) {
                     // Successful logout and the Logout URL is configured, hence redirecting to Logout URL.
                     // Token not set and the logout URL is configured.
-                    if (log.isDebugEnabled()) {
-                        log.debug("Logout URL: " + JWTInboundUtil.neutralize(logoutUrl) +
-                                " provided and the token is set" +
-                                " to empty. Hence considering as successful logout scenario.");
-                    }
-                    builder.setStatusCode(HttpServletResponse.SC_FOUND);
-                    // Redirect to Logout URL.
-                    builder.setRedirectURL(logoutUrl);
+                    return buildLogoutResponse(builder, logoutUrl);
                 } else {
                     // Successful logout but the Logout URL is not configured, hence redirecting to error page.
                     // The token is not set and the logout URL is not configured.
-                    String clientErrorPage = inboundResponse.getEndpointUrl();
-                    if (StringUtils.isNotBlank(clientErrorPage)) {
-                        builder.setStatusCode(HttpServletResponse.SC_FOUND);
-                        builder.setRedirectURL(clientErrorPage);
-
-                        Map<String, String[]> parameters = new HashMap<>();
-                        if (inboundResponse.getParameters() != null) {
-                            for (Map.Entry<String, String> entry : inboundResponse.getParameters().entrySet()) {
-                                parameters.put(entry.getKey(), new String[]{entry.getValue()});
-                            }
-                            builder.setParameters(parameters);
-                        }
-                    } else {
-                        // This else part will not be reached in the usual flow unless anyone bypassed the flow.
-                        // This will be reached if the token is set to null, logout URL is not configured and the
-                        // client error page is not defined. But anyway, if the token is not set and the logout URL
-                        // is not defined, the client error page will be defined in the handleLogoutResult() method in
-                        // the JWTInboundRequestProcessor class and the defined error page will be returned through
-                        // above if scope.
-                        builder.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
-                    }
+                    return buildErrorResponse(builder, inboundResponse);
                 }
             } else {
                 // Successful authenticated scenario.
-                if (log.isDebugEnabled()) {
-                    log.debug("Successful authenticated scenario. Building the response to redirect.");
-                }
-                builder.setStatusCode(HttpServletResponse.SC_FOUND);
-                String jwtParamName = inboundResponse.getJwtParamName();
-                if (log.isDebugEnabled() &&
-                        IdentityUtil.isTokenLoggable(JWTInboundConstants.IdentityTokens.JWT_TOKEN)) {
-                    log.debug(
-                            "Adding JWT parameter: '" + JWTInboundUtil.neutralize(jwtParamName) + "' with the value: " +
-                                    JWTInboundUtil.neutralize(jwtToken));
-                }
-                builder.addParameter(jwtParamName, jwtToken);
-
-                String redirectUrlParamName = inboundResponse.getRedirectUrlParamName();
-                String redirectUrl = inboundResponse.getRedirectUrl();
-                if (log.isDebugEnabled()) {
-                    log.debug("Redirect URL parameter: " + JWTInboundUtil.neutralize(redirectUrlParamName) +
-                            " with the value: " + JWTInboundUtil.neutralize(redirectUrl));
-                }
-                if (StringUtils.isNotBlank(redirectUrl)) {
-                    // Add redirect URL parameter if provided.
-                    builder.addParameter(redirectUrlParamName, redirectUrl);
-                }
-
-                String errorUrlParamName = inboundResponse.getErrorUrlParamName();
-                String errorUrl = inboundResponse.getErrorUrl();
-                if (log.isDebugEnabled()) {
-                    log.debug("Error URL parameter: " + JWTInboundUtil.neutralize(errorUrlParamName) +
-                            " with the value: " + JWTInboundUtil.neutralize(errorUrl));
-                }
-                if (StringUtils.isNotBlank(errorUrl)) {
-                    // Add error URL parameter if provided.
-                    builder.addParameter(errorUrlParamName, errorUrl);
-                }
-                // Redirect to API endpoint.
-                String endpointUrl = inboundResponse.getEndpointUrl();
-                if (log.isDebugEnabled()) {
-                    log.debug("Defining the Endpoint URL: " + JWTInboundUtil.neutralize(endpointUrl) +
-                            " as the redirection endpoint.");
-                }
-                builder.setRedirectURL(endpointUrl);
+                return buildAuthenticatedResponse(builder, inboundResponse, jwtToken);
             }
         }
         return builder;
@@ -195,6 +128,117 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
             return true;
         }
         return false;
+    }
+
+    /**
+     * Builds the logout response
+     *
+     * @param builder The response builder
+     * @param logoutUrl The logout URL
+     * @return
+     */
+    private HttpIdentityResponse.HttpIdentityResponseBuilder buildLogoutResponse(
+            HttpIdentityResponse.HttpIdentityResponseBuilder builder, String logoutUrl) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Logout URL: " + JWTInboundUtil.neutralize(logoutUrl) +
+                    " provided and the token is set" +
+                    " to empty. Hence considering as successful logout scenario.");
+        }
+        builder.setStatusCode(HttpServletResponse.SC_FOUND);
+        // Redirect to Logout URL.
+        builder.setRedirectURL(logoutUrl);
+        return builder;
+    }
+
+    /**
+     * Builds the authenticated response
+     *
+     * @param builder The response builder
+     * @param inboundResponse The inbound response
+     * @param jwtToken The JWT Token
+     * @return
+     */
+    private HttpIdentityResponse.HttpIdentityResponseBuilder buildAuthenticatedResponse(
+            HttpIdentityResponse.HttpIdentityResponseBuilder builder, JWTInboundResponse inboundResponse,
+            String jwtToken) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Successful authenticated scenario. Building the response to redirect.");
+        }
+        builder.setStatusCode(HttpServletResponse.SC_FOUND);
+        String jwtParamName = inboundResponse.getJwtParamName();
+        if (log.isDebugEnabled() &&
+                IdentityUtil.isTokenLoggable(JWTInboundConstants.IdentityTokens.JWT_TOKEN)) {
+            log.debug(
+                    "Adding JWT parameter: '" + JWTInboundUtil.neutralize(jwtParamName) + "' with the value: " +
+                            JWTInboundUtil.neutralize(jwtToken));
+        }
+        builder.addParameter(jwtParamName, jwtToken);
+
+        String redirectUrlParamName = inboundResponse.getRedirectUrlParamName();
+        String redirectUrl = inboundResponse.getRedirectUrl();
+        if (log.isDebugEnabled()) {
+            log.debug("Redirect URL parameter: " + JWTInboundUtil.neutralize(redirectUrlParamName) +
+                    " with the value: " + JWTInboundUtil.neutralize(redirectUrl));
+        }
+        if (StringUtils.isNotBlank(redirectUrl)) {
+            // Add redirect URL parameter if provided.
+            builder.addParameter(redirectUrlParamName, redirectUrl);
+        }
+
+        String errorUrlParamName = inboundResponse.getErrorUrlParamName();
+        String errorUrl = inboundResponse.getErrorUrl();
+        if (log.isDebugEnabled()) {
+            log.debug("Error URL parameter: " + JWTInboundUtil.neutralize(errorUrlParamName) +
+                    " with the value: " + JWTInboundUtil.neutralize(errorUrl));
+        }
+        if (StringUtils.isNotBlank(errorUrl)) {
+            // Add error URL parameter if provided.
+            builder.addParameter(errorUrlParamName, errorUrl);
+        }
+        // Redirect to API endpoint.
+        String endpointUrl = inboundResponse.getEndpointUrl();
+        if (log.isDebugEnabled()) {
+            log.debug("Defining the Endpoint URL: " + JWTInboundUtil.neutralize(endpointUrl) +
+                    " as the redirection endpoint.");
+        }
+        builder.setRedirectURL(endpointUrl);
+        return builder;
+    }
+
+    /**
+     * Builds the error response
+     *
+     * @param builder The response builder
+     * @param inboundResponse The inbound response
+     * @return
+     */
+    private HttpIdentityResponse.HttpIdentityResponseBuilder buildErrorResponse(
+            HttpIdentityResponse.HttpIdentityResponseBuilder builder, JWTInboundResponse inboundResponse) {
+
+        String clientErrorPage = inboundResponse.getEndpointUrl();
+        if (StringUtils.isNotBlank(clientErrorPage)) {
+            builder.setStatusCode(HttpServletResponse.SC_FOUND);
+            builder.setRedirectURL(clientErrorPage);
+
+            Map<String, String[]> parameters = new HashMap<>();
+            if (inboundResponse.getParameters() != null) {
+                for (Map.Entry<String, String> entry : inboundResponse.getParameters().entrySet()) {
+                    parameters.put(entry.getKey(), new String[]{entry.getValue()});
+                }
+                builder.setParameters(parameters);
+            }
+        } else {
+            // This else part will not be reached in the usual flow unless anyone bypassed the flow.
+            // This will be reached if the token is set to null, logout URL is not configured and the
+            // client error page is not defined. But anyway, if the token is not set and the logout URL
+            // is not defined, the client error page will be defined in the handleLogoutResult() method in
+            // the JWTInboundRequestProcessor class and the defined error page will be returned through
+            // above if scope.
+            builder.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return builder;
     }
 
     @Override
