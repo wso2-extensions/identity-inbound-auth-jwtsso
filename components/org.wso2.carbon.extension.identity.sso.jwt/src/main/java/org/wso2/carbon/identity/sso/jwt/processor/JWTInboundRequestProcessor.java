@@ -162,7 +162,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
 
             // Validate endpoint URL.
             if (!validateEndpointUrl(identityRequest)) {
-                String msg = "Mandatory configuration: Endpoint API is not configured.";
+                String msg = "Mandatory configuration: Endpoint API is not configured for the Relying Party: " +
+                        JWTInboundUtil.neutralize(this.relyingParty);
                 log.error(msg, new JWTIdentityException(msg));
                 return JWTInboundUtil.sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
                         JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
@@ -170,7 +171,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
 
             // Validate JWS Algorithm.
             if (!validateJwsAlgorithm(identityRequest)) {
-                String msg = "Invalid JWT Signing Algorithm configured.";
+                String msg = "Invalid JWT Signing Algorithm configured for the Relying Party: " +
+                        JWTInboundUtil.neutralize(this.relyingParty);
                 log.error(msg, new JWTIdentityException(msg));
                 return JWTInboundUtil.sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
                         JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
@@ -178,7 +180,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
 
             // Validate API Key
             if (!validateApiKey(identityRequest)) {
-                String msg = "Mandatory configuration: API Key is not configured.";
+                String msg = "Mandatory configuration: API Key is not configured for the Relying Party: " +
+                        JWTInboundUtil.neutralize(this.relyingParty);
                 log.error(msg, new JWTIdentityException(msg));
                 return JWTInboundUtil.sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
                         JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
@@ -240,7 +243,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         this.endpointUrl = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.SITE_API_URL);
         if (StringUtils.isNotBlank(this.endpointUrl)) {
             if (log.isDebugEnabled()) {
-                log.debug("Setting the endpoint URL: " + JWTInboundUtil.neutralize(this.endpointUrl));
+                log.debug("Setting the endpoint URL: " + JWTInboundUtil.neutralize(this.endpointUrl) + " for the " +
+                        "Relying Party: " + JWTInboundUtil.neutralize(this.relyingParty));
             }
             return true;
         }
@@ -258,7 +262,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         setJWSAlgorithm(getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.JWS_ALGORITHM));
         if (this.jwsAlgorithm != null) {
             if (log.isDebugEnabled()) {
-                log.debug("Setting the JWS Algorithm: " + JWTInboundUtil.neutralize(this.jwsAlgorithm.getName()));
+                log.debug("Setting the JWS Algorithm: " + JWTInboundUtil.neutralize(this.jwsAlgorithm.getName()) +
+                        " for the Relying Party: " + JWTInboundUtil.neutralize(this.relyingParty));
             }
             return true;
         }
@@ -309,7 +314,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         if (StringUtils.isNotBlank(this.redirectUrl)) {
             if (validateRegexInput(redirectUrlRegex, this.redirectUrl)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Setting the Redirect URL: " + JWTInboundUtil.neutralize(this.redirectUrl));
+                    log.debug("Setting the Redirect URL: " + JWTInboundUtil.neutralize(this.redirectUrl) +
+                            " for the Relying Party: " + JWTInboundUtil.neutralize(this.relyingParty));
                 }
                 // Valid Redirect URL.
                 return true;
@@ -350,7 +356,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         if (StringUtils.isNotBlank(this.errorUrl)) {
             if (validateRegexInput(errorUrlRegex, this.errorUrl)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Setting the Error URL: " + JWTInboundUtil.neutralize(this.errorUrl));
+                    log.debug("Setting the Error URL: " + JWTInboundUtil.neutralize(this.errorUrl) +
+                            " for the Relying Party: " + JWTInboundUtil.neutralize(this.relyingParty));
                 }
                 // Valid Error URL.
                 return true;
@@ -417,7 +424,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             respBuilder.setToken(generateJWTToken(identityRequest, this.apiKey, userName,
                     userAttributes));
         } catch (JWTIdentityException e) {
-            String msg = "Error while generating JWT Token";
+            String msg = "Error while generating JWT Token for the Relying Party: " +
+                    JWTInboundUtil.neutralize(this.relyingParty);
             log.error(msg, e);
             return JWTInboundUtil
                     .sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
@@ -478,7 +486,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             respBuilder.setToken(null);
             respBuilder.setLogoutUrl(logoutUrl);
         } else {
-            String msg = "Mandatory configuration: Logout URL is not configured.";
+            String msg = "Mandatory configuration: Logout URL is not configured for the Relying Party: " +
+                    JWTInboundUtil.neutralize(this.relyingParty);
             log.error(msg, new JWTIdentityException(msg));
             return JWTInboundUtil.sendToRetryPage(JWTInboundConstants.ErrorMessages.MISCONFIGURATION_STATUS,
                     JWTInboundConstants.ErrorMessages.MISCONFIGURATION_MESSAGE);
@@ -527,7 +536,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             }
             return properties;
         } catch (IdentityApplicationManagementException e) {
-            throw new RuntimeException("Error while reading inbound authenticator properties", e);
+            throw new RuntimeException("Error while reading inbound authenticator properties for the Relying Party: " +
+                    JWTInboundUtil.neutralize(this.relyingParty), e);
         }
     }
 
@@ -556,7 +566,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
 
             return false;
         } catch (IdentityApplicationManagementException e) {
-            throw new RuntimeException("Error while reading inbound authenticator properties", e);
+            throw new RuntimeException("Error while validating the Relying Party: " +
+                    JWTInboundUtil.neutralize(this.relyingParty), e);
         }
     }
 
@@ -665,7 +676,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     private void setJWSAlgorithm(String algorithm) {
 
         if (log.isDebugEnabled()) {
-            log.debug("Algorithm provided: " + JWTInboundUtil.neutralize(algorithm));
+            log.debug("Algorithm provided: " + JWTInboundUtil.neutralize(algorithm) + " for the Relying Party: " +
+                    JWTInboundUtil.neutralize(this.relyingParty));
         }
         if (StringUtils.isBlank(algorithm) || algorithm.equals("HS256")) {
             // Set default value as HS256.
@@ -678,7 +690,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
             this.jwsAlgorithm = null;
         }
         if (log.isDebugEnabled()) {
-            log.debug("Algorithm set to : " + JWTInboundUtil.neutralize(this.jwsAlgorithm.getName()));
+            log.debug("Algorithm set to : " + JWTInboundUtil.neutralize(this.jwsAlgorithm.getName()) +
+                    " for the Relying Party: " + JWTInboundUtil.neutralize(this.relyingParty));
         }
     }
 }
