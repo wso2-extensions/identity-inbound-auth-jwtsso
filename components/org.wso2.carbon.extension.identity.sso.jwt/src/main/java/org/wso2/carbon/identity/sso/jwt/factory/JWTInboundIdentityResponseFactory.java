@@ -136,7 +136,7 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
      * @param logoutUrl The logout URL.
      * @return The response builder after setting the required options.
      */
-    public HttpIdentityResponseBuilder buildLogoutResponse(HttpIdentityResponseBuilder builder, String logoutUrl) {
+    private HttpIdentityResponseBuilder buildLogoutResponse(HttpIdentityResponseBuilder builder, String logoutUrl) {
 
         if (log.isDebugEnabled()) {
             log.debug("Logout URL: " + JWTInboundUtil.neutralize(logoutUrl) +

@@ -265,6 +265,12 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
         return false;
     }
 
+    /**
+     * Validates the API key configuration
+     *
+     * @param identityRequest The identity response
+     * @return True if the API key is configured
+     */
     private boolean validateApiKey(IdentityRequest identityRequest) {
 
         this.apiKey = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.API_KEY);
