@@ -20,7 +20,7 @@ package org.wso2.carbon.identity.sso.jwt.factory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.application.authentication.framework.inbound.HttpIdentityResponse;
+import org.wso2.carbon.identity.application.authentication.framework.inbound.HttpIdentityResponse.HttpIdentityResponseBuilder;
 import org.wso2.carbon.identity.application.authentication.framework.inbound.HttpIdentityResponseFactory;
 import org.wso2.carbon.identity.application.authentication.framework.inbound.IdentityResponse;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
@@ -71,10 +71,9 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
      * @return a corresponding HTTPResponse in the form of a builder, so that it could be built on demand.
      */
     @Override
-    public HttpIdentityResponse.HttpIdentityResponseBuilder create(IdentityResponse identityResponse) {
+    public HttpIdentityResponseBuilder create(IdentityResponse identityResponse) {
 
-        HttpIdentityResponse.HttpIdentityResponseBuilder builder
-                = new HttpIdentityResponse.HttpIdentityResponseBuilder();
+        HttpIdentityResponseBuilder builder = new HttpIdentityResponseBuilder();
 
         if (identityResponse instanceof JWTInboundResponse) {
             JWTInboundResponse inboundResponse = (JWTInboundResponse) identityResponse;
@@ -137,8 +136,7 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
      * @param logoutUrl The logout URL.
      * @return The response builder after setting the required options.
      */
-    private HttpIdentityResponse.HttpIdentityResponseBuilder buildLogoutResponse(
-            HttpIdentityResponse.HttpIdentityResponseBuilder builder, String logoutUrl) {
+    public HttpIdentityResponseBuilder buildLogoutResponse(HttpIdentityResponseBuilder builder, String logoutUrl) {
 
         if (log.isDebugEnabled()) {
             log.debug("Logout URL: " + JWTInboundUtil.neutralize(logoutUrl) +
@@ -159,9 +157,9 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
      * @param jwtToken        The JWT Token.
      * @return The response builder after setting the required options.
      */
-    private HttpIdentityResponse.HttpIdentityResponseBuilder buildAuthenticatedResponse(
-            HttpIdentityResponse.HttpIdentityResponseBuilder builder, JWTInboundResponse inboundResponse,
-            String jwtToken) {
+    private HttpIdentityResponseBuilder buildAuthenticatedResponse(HttpIdentityResponseBuilder builder,
+                                                                   JWTInboundResponse inboundResponse,
+                                                                   String jwtToken) {
 
         if (log.isDebugEnabled()) {
             log.debug("Successful authenticated scenario. Building the response to redirect.");
@@ -214,8 +212,8 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
      * @param inboundResponse The inbound response.
      * @return The response builder after setting the required options.
      */
-    private HttpIdentityResponse.HttpIdentityResponseBuilder buildErrorResponse(
-            HttpIdentityResponse.HttpIdentityResponseBuilder builder, JWTInboundResponse inboundResponse) {
+    private HttpIdentityResponseBuilder buildErrorResponse(HttpIdentityResponseBuilder builder,
+                                                           JWTInboundResponse inboundResponse) {
 
         String clientErrorPage = inboundResponse.getEndpointUrl();
         if (StringUtils.isNotBlank(clientErrorPage)) {
@@ -242,8 +240,7 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
     }
 
     @Override
-    public void create(
-            HttpIdentityResponse.HttpIdentityResponseBuilder builder, IdentityResponse identityResponse) {
+    public void create(HttpIdentityResponseBuilder builder, IdentityResponse identityResponse) {
 
         this.create(identityResponse);
     }
