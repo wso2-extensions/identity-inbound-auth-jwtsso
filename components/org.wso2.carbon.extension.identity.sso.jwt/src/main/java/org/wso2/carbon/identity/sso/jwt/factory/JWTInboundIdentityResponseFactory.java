@@ -108,10 +108,7 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
     private boolean isLogoutResponse(String jwtToken) {
 
         // Consider as logout response if the token is set to empty.
-        if (StringUtils.isBlank(jwtToken)) {
-            return true;
-        }
-        return false;
+        return StringUtils.isBlank(jwtToken);
     }
 
     /**
@@ -123,10 +120,7 @@ public class JWTInboundIdentityResponseFactory extends HttpIdentityResponseFacto
     private boolean isValidLogoutResponse(String logoutUrl) {
 
         // Check if the Logout URL is configured in the SP configuration.
-        if (StringUtils.isNotBlank(logoutUrl)) {
-            return true;
-        }
-        return false;
+        return StringUtils.isNotBlank(logoutUrl);
     }
 
     /**

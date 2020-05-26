@@ -30,11 +30,10 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.application.authentication.framework.exception.FrameworkException;
 import org.wso2.carbon.identity.application.authentication.framework.inbound.IdentityMessageContext;
 import org.wso2.carbon.identity.application.authentication.framework.inbound.IdentityProcessor;
 import org.wso2.carbon.identity.application.authentication.framework.inbound.IdentityRequest;
-import org.wso2.carbon.identity.application.authentication.framework.inbound.IdentityResponse;
+import org.wso2.carbon.identity.application.authentication.framework.inbound.IdentityResponse.IdentityResponseBuilder;
 import org.wso2.carbon.identity.application.authentication.framework.inbound.InboundConstants;
 import org.wso2.carbon.identity.application.authentication.framework.model.AuthenticationResult;
 import org.wso2.carbon.identity.application.common.IdentityApplicationManagementException;
@@ -147,9 +146,8 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
      *                        servlet or from the framework after authentication).
      * @return an instance of IdentityResponse which may be further customised (similar to how an IdentityRequest can
      * be customised).
-     * @throws FrameworkException if any abnormal conditions are encountered by the framework during authentication.
      */
-    public IdentityResponse.IdentityResponseBuilder process(IdentityRequest identityRequest) throws FrameworkException {
+    public IdentityResponseBuilder process(IdentityRequest identityRequest) {
 
         IdentityMessageContext messageContext = new IdentityMessageContext<>(identityRequest,
                 new HashMap<String, String>());
@@ -279,10 +277,7 @@ public class JWTInboundRequestProcessor extends IdentityProcessor {
     private boolean validateApiKey(IdentityRequest identityRequest) {
 
         this.apiKey = getPropertyValue(identityRequest, JWTInboundConstants.SPBasedConfigs.API_KEY);
-        if (StringUtils.isNotBlank(this.apiKey)) {
-            return true;
-        }
-        return false;
+        return StringUtils.isNotBlank(this.apiKey);
     }
 
     /**

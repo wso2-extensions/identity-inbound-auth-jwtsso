@@ -64,8 +64,8 @@ public class JWTInboundRequestFactory extends HttpIdentityRequestFactory {
         }
         if (StringUtils.isNotBlank(requestUri) && requestUri.contains(JWTInboundConstants.BASE_PATH)) {
             if (log.isDebugEnabled()) {
-                log.debug("Request URI contains the base path: " + JWTInboundConstants.BASE_PATH + "\nHandling " +
-                        "authentication request through JWT Inbound Authenticator.");
+                log.debug("Request URI contains the base path: " + JWTInboundConstants.BASE_PATH +
+                        "\nHandling authentication request through JWT Inbound Authenticator.");
             }
             return true;
         }

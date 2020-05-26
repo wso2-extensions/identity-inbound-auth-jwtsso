@@ -21,9 +21,11 @@ package org.wso2.carbon.identity.sso.jwt.factory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.application.authentication.framework.config.ConfigurationFacade;
+import org.wso2.carbon.identity.application.authentication.framework.inbound.HttpIdentityResponse.HttpIdentityResponseBuilder;
 import org.wso2.carbon.identity.application.authentication.framework.inbound.IdentityMessageContext;
 import org.wso2.carbon.identity.application.authentication.framework.inbound.IdentityResponse;
-import org.wso2.carbon.identity.sso.jwt.message.JWTInboundResponse;
+import org.wso2.carbon.identity.sso.jwt.message.JWTInboundResponse.JWTInboundResponseBuilder;
 
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.testng.Assert.assertEquals;
@@ -46,12 +48,11 @@ public class JWTInboundIdentityResponseFactoryTest {
 
         IdentityMessageContext identityMessageContext = mock(IdentityMessageContext.class);
         IdentityResponse jwtInboundResponse1 = new IdentityResponse.IdentityResponseBuilder().build();
-        JWTInboundResponse jwtInboundResponse2 =
-                new JWTInboundResponse.JWTInboundResponseBuilder(identityMessageContext).build();
+        JWTInboundResponseBuilder jwtInboundResponse2 = new JWTInboundResponseBuilder(identityMessageContext);
         return new Object[][]{
                 {null, false},
                 {jwtInboundResponse1, false},
-                {jwtInboundResponse2, true}
+                {jwtInboundResponse2.build(), true}
         };
     }
 
@@ -60,5 +61,27 @@ public class JWTInboundIdentityResponseFactoryTest {
 
         boolean canHandle = jwtInboundIdentityResponseFactory.canHandle(identityResponse);
         assertEquals(canHandle, expected);
+    }
+
+    @DataProvider(name = "BuildResponseBuilderData")
+    public Object[][] buildResponseBuilderData() {
+
+        return new Object[][]{
+                {null, "http://localhost/logout", null, "http://localhost/logout"},
+                {null, null, null, ConfigurationFacade.getInstance().getAuthenticationEndpointRetryURL()},
+                {"dummyToken", null, "http://localhost/endpointUrl", "http://localhost/endpointUrl"}
+        };
+    }
+
+    @Test(dataProvider = "BuildResponseBuilderData")
+    public void testCreate(String jwtToken, String logoutUrl, String endpointUrl, String expected) {
+
+        IdentityMessageContext identityMessageContext = mock(IdentityMessageContext.class);
+        JWTInboundResponseBuilder inboundResponse = new JWTInboundResponseBuilder(identityMessageContext);
+        inboundResponse.setToken(jwtToken);
+        inboundResponse.setLogoutUrl(logoutUrl);
+        inboundResponse.setEndpointUrl(endpointUrl);
+        HttpIdentityResponseBuilder builder = jwtInboundIdentityResponseFactory.create(inboundResponse.build());
+        assertEquals(builder.build().getRedirectURL(), expected);
     }
 }
