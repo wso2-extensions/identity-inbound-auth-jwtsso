@@ -82,7 +82,7 @@ administrator.
 8. Go to **Claim Configuration** and click **Define Custom Claim Dialect** to define the claims to generate the JWT
  token. (This is required to include the user claims in the JWT token; otherwise, no attributes will be included in
  the JWT token apart from the default attributes such as exp and iat.) Add the **Service Provider Claim** name that
- corresponds to the **Local Claim** URI and mark it as **Mandatory Claim**.You'll have to refer to your application's
+ corresponds to the **Local Claim** URI and mark it as **Mandatory Claim**. You'll have to refer to your application's
  documentation to get the required claims for the service provider. 
 ![alt text](images/image3.png)
 8. Click **Update** to save the changes. Now you have configured the service provider.
@@ -98,12 +98,12 @@ administrator.
 ![alt text](images/image4.png)
 3. Once you've successfully logged in or if you already have an authenticated session in WSO2 Identity Server, you
  should be redirected to your application's home page or to the Redirect URL specified.
-4. Let’s test the logout flow by making the request as follows.
+4. Let’s test the logout flow by making the request to JWT SSO logout endpoint as follows.
     ````
     https://localhost:9443/identity/jwtsso/logout?jwtRP=test-app
     ````
 5. Once you make the above request, your session will be terminated from WSO2 Identity Server and you'll be
- redirected back to the Logout URL configured in the service provider configurations.
+ redirected back to the Logout URL of your application configured in the service provider configurations.
  
 ### Customizing the application
 
