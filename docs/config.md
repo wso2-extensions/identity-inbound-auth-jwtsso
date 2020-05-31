@@ -62,7 +62,7 @@ administrator.
 4. In the **Inbound Authentication Configuration** section, click **JWT SSO Configuration**.
 5. Enter **test-app** for **Relying Party** and enter the **Endpoint API** and the **API Key** which you've
  obtained from your application.
-![alt text](images/image2.png)
+![JWT SSO Configuration](images/image2.png)
 6. Enter the **Logout URL** to which the user should be redirected after the successful logout.
 7. Refer below for the properties used in the JWT SSO inbound authenticator and the sample values related to those
  properties.
@@ -84,7 +84,7 @@ administrator.
  the JWT token apart from the default attributes such as exp and iat.) Add the **Service Provider Claim** name that
  corresponds to the **Local Claim** URI and mark it as **Mandatory Claim**. You'll have to refer to your application's
  documentation to get the required claims for the service provider. 
-![alt text](images/image3.png)
+![Claim Configuration](images/image3.png)
 8. Click **Update** to save the changes. Now you have configured the service provider.
 
 ### Testing the JWT SSO
@@ -95,7 +95,7 @@ administrator.
     https://localhost:9443/identity/jwtsso?jwtRP=test-app
     ````
 2. Login to the WSO2 Identity Server by providing the username and password in the basic authentication.
-![alt text](images/image4.png)
+![WSO2 IS Login Page](images/image4.png)
 3. Once you've successfully logged in or if you already have an authenticated session in WSO2 Identity Server, you
  should be redirected to your application's home page or to the Redirect URL specified.
 4. Let’s test the logout flow by making the request to JWT SSO logout endpoint as follows.
