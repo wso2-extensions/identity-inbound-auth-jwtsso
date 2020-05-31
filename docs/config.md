@@ -73,10 +73,10 @@ administrator.
     | API Key | The API Key used to sign the JWT token. |  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx |
     | JWT Token Expiration Period | The token expiration (exp) to set since the token was generated in seconds. | 120 | 60 |
     | JWT Signing Algorithm | The JWS Algorithm used to sign the token. | HS256 | Supported Algorithms: HS256/ HS384 / HS512 |
-    | Redirect URL Regex | The regex to validate the Redirect to URL. |  | https://your-app.com/.* |
-    | Error URL Regex | The regex to validate the Error to URL. |  | https://your-app.com/.* |
+    | Redirect URL Regex | The regex to validate the Redirect URL. |  | https://your-app.com/.* |
+    | Error URL Regex | The regex to validate the Error URL. |  | https://your-app.com/.* |
     | Logout URL | The logout URL to be redirected to after the successful logout in WSO2 IS. |  | https://your-app.com/users/sign_out |
-    | JWT Parameter Name | The JWT parameter name to be used to send the JWT token after the user authentication. | jwt | jwt |
+    | JWT Parameter Name | The JWT parameter name to be used to send the JWT token after the authenticating the user. | jwt | jwt |
     | Redirect URL Parameter Name | The Redirect URL parameter name to be used to include the Redirect URL. | return_to | return_to |
     | Error URL Parameter Name | The Error URL parameter name to be used to include the Error URL. | error_url | error_url |
 8. Go to **Claim Configuration** and click **Define Custom Claim Dialect** to define the claims to generate the JWT
