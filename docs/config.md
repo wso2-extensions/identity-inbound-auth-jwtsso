@@ -68,7 +68,7 @@ administrator.
  properties.
     | Field | Description | Default Value | Sample Value |
     | --- | --- | --- | --- |
-    | Relying Party | The name of the relying party. This will be needed when we invoke the authentication request. |  | test-app |
+    | Relying Party | The name of the relying party. This will be needed when we perform authentication request. |  | test-app |
     | Endpoint API | The endpoint where the JWT response should be sent to after authenticating the user. |  | https://your-app.com/api/sso/v2/sso/jwt |
     | API Key | The API Key used to sign the JWT token. |  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx |
     | JWT Token Expiration Period | The token expiration (exp) to set since the token was generated in seconds. | 120 | 60 |
