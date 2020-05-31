@@ -25,7 +25,7 @@ JWT SSO Version 1.0.0 Inbound Authenticator is supported by WSO2 Identity Server
 
 1. Enable JWT SSO on your application. Refer to your application's documentation for instruction on enabling JWT SSO
  for your application.
-2. Get the below configuration details of the application by signing into the admin portal or referring to the
+2. Get the configuration details of the application by signing into the admin portal or referring to the
  documentation of your application.
     * Endpoint API
     * API key
@@ -39,7 +39,7 @@ JWT SSO Version 1.0.0 Inbound Authenticator is supported by WSO2 Identity Server
 
 1. Place the org.wso2.carbon.identity.sso.jwt-x.x.x.jar file into the <IS_HOME>/repository/components/dropins
  directory.
-2. Add the below configuration in **deployment.toml** file resides in <IS_HOME>/repository/conf directory.
+2. Add the configuration below in **deployment.toml** file resides in <IS_HOME>/repository/conf directory.
     ````
     [[resource.access_control]]
     context="/identity(.*)"
@@ -68,14 +68,14 @@ administrator.
  properties.
     | Field | Description | Default Value | Sample Value |
     | --- | --- | --- | --- |
-    | Relying Party | The name of the relying party. This will be needed when we invoke the authentication request. |  | lms-test-app |
-    | Endpoint API | The endpoint where the JWT response should be sent to after authenticating the user. In the Thinkific LMS it should be in the format of {SITE_URL}/api/sso/v2/sso/jwt |  | https://your-school.thinkific.com/api/sso/v2/sso/jwt |
-    | API Key | The API Key used to sign the JWT token which we've obtained earlier from the Thinkific Admin Portal. |  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx |
+    | Relying Party | The name of the relying party. This will be needed when we invoke the authentication request. |  | test-app |
+    | Endpoint API | The endpoint where the JWT response should be sent to after authenticating the user. |  | https://your-app.com/api/sso/v2/sso/jwt |
+    | API Key | The API Key used to sign the JWT token. |  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx |
     | JWT Token Expiration Period | The token expiration (exp) to set since the token was generated in seconds | 120 | 60 |
     | JWT Signing Algorithm | The JWS Algorithm used to sign the token | HS256 | Supported Algorithms: HS256/ HS384/ HS512 |
-    | Redirect URL Regex | The regex to validate the Redirect to URL |  | https://your-school.thinkific.com/.* |
-    | Error URL Regex | The regex to validate the Error to URL |  | https://your-school.thinkific.com/.* |
-    | Logout URL | The logout URL to be redirected to after the successful logout in WSO2 IS |  | https://your-school.thinkific.com/users/sign_out |
+    | Redirect URL Regex | The regex to validate the Redirect to URL |  | https://your-app.com/.* |
+    | Error URL Regex | The regex to validate the Error to URL |  | https://your-app.com/.* |
+    | Logout URL | The logout URL to be redirected to after the successful logout in WSO2 IS |  | https://your-app.com/users/sign_out |
     | JWT Parameter Name | The JWT parameter name to be used to send the JWT token after the user authentication | jwt | jwt |
     | Redirect URL Parameter Name | The Redirect URL parameter name to be used to include the Redirect URL | return_to | return_to |
     | Error URL Parameter Name | The Error URL parameter name to be used to include the Error URL | error_url | error_url |
