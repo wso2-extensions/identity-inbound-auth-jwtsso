@@ -71,14 +71,14 @@ administrator.
     | Relying Party | The name of the relying party. This will be needed when we invoke the authentication request. |  | test-app |
     | Endpoint API | The endpoint where the JWT response should be sent to after authenticating the user. |  | https://your-app.com/api/sso/v2/sso/jwt |
     | API Key | The API Key used to sign the JWT token. |  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx |
-    | JWT Token Expiration Period | The token expiration (exp) to set since the token was generated in seconds | 120 | 60 |
-    | JWT Signing Algorithm | The JWS Algorithm used to sign the token | HS256 | Supported Algorithms: HS256/ HS384/ HS512 |
-    | Redirect URL Regex | The regex to validate the Redirect to URL |  | https://your-app.com/.* |
-    | Error URL Regex | The regex to validate the Error to URL |  | https://your-app.com/.* |
-    | Logout URL | The logout URL to be redirected to after the successful logout in WSO2 IS |  | https://your-app.com/users/sign_out |
-    | JWT Parameter Name | The JWT parameter name to be used to send the JWT token after the user authentication | jwt | jwt |
-    | Redirect URL Parameter Name | The Redirect URL parameter name to be used to include the Redirect URL | return_to | return_to |
-    | Error URL Parameter Name | The Error URL parameter name to be used to include the Error URL | error_url | error_url |
+    | JWT Token Expiration Period | The token expiration (exp) to set since the token was generated in seconds. | 120 | 60 |
+    | JWT Signing Algorithm | The JWS Algorithm used to sign the token. | HS256 | Supported Algorithms: HS256/ HS384 / HS512 |
+    | Redirect URL Regex | The regex to validate the Redirect to URL. |  | https://your-app.com/.* |
+    | Error URL Regex | The regex to validate the Error to URL. |  | https://your-app.com/.* |
+    | Logout URL | The logout URL to be redirected to after the successful logout in WSO2 IS. |  | https://your-app.com/users/sign_out |
+    | JWT Parameter Name | The JWT parameter name to be used to send the JWT token after the user authentication. | jwt | jwt |
+    | Redirect URL Parameter Name | The Redirect URL parameter name to be used to include the Redirect URL. | return_to | return_to |
+    | Error URL Parameter Name | The Error URL parameter name to be used to include the Error URL. | error_url | error_url |
 8. Go to **Claim Configuration** and click **Define Custom Claim Dialect** to define the claims to generate the JWT
  token. (This is required to include the user claims in the JWT token; otherwise, no attributes will be included in
  the JWT token apart from the default attributes such as exp and iat.) Add the **Service Provider Claim** name that
