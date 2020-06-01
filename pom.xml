@@ -42,6 +42,7 @@
         </developerConnection>
         <tag>HEAD</tag>
     </scm>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
