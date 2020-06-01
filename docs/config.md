@@ -17,7 +17,7 @@ JWT SSO Version 1.0.0 Inbound Authenticator is supported by WSO2 Identity Server
 ### Download and set up JWT SSO
 
 * [Download WSO2 Identity Server](https://wso2.com/identity-and-access-management) and
-[Install the Product](https://is.docs.wso2.com/en/5.10.0/setup/installing-the-product).
+[Install the Product](https://is.docs.wso2.com/en/latest/setup/installing-the-product).
 * Download the JWT SSO Inbound Authenticator JAR from the 
 [IS Connector store](https://github.com/mifrazmurthaja/identity-inbound-auth-jwtsso/releases).
 
@@ -46,15 +46,15 @@ JWT SSO Version 1.0.0 Inbound Authenticator is supported by WSO2 Identity Server
     secure="false"
     http_method="GET"
     ````
-3. [Start/ Restart the WSO2 Identity Server](https://is.docs.wso2.com/en/5.10.0/setup/running-the-product).
+3. [Start/ Restart the WSO2 Identity Server](https://is.docs.wso2.com/en/latest/setup/running-the-product).
 
 ### Configuring the service provider
 
 Let's configure the WSO2 Identity Server to use JWT SSO by
-[adding a new Service Provider](https://is.docs.wso2.com/en/5.10.0/learn/adding-and-configuring-a-service-provider/).
+[adding a new Service Provider](https://is.docs.wso2.com/en/latest/learn/adding-and-configuring-a-service-provider).
 
 1. Log in to the
-[management console](https://is.docs.wso2.com/en/5.10.0/setup/getting-started-with-the-management-console/) as an
+[management console](https://is.docs.wso2.com/en/latest/setup/getting-started-with-the-management-console) as an
 administrator.
 2. In the **Identity** section under the Main tab, click **Add** under **Service Providers**.
 3. Enter a name for the service provider in the **Service Provider Name** text box and click **Register**.
