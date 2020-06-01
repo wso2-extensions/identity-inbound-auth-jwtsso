@@ -1,7 +1,7 @@
 # Configuring JWT SSO Inbound Authenticator
 
 This topic provides instructions on configuring the JWT SSO inbound authenticator and the WSO2 Identity Server 
-to perform single-sign-on with the applications which use JWT based SSO.
+to perform single-sign-on with the applications which use JWT-based SSO.
 
 ````
 JWT SSO Version 1.0.0 Inbound Authenticator is supported by WSO2 Identity Server versions 5.10.0. 
@@ -23,7 +23,7 @@ JWT SSO Version 1.0.0 Inbound Authenticator is supported by WSO2 Identity Server
 
 ### Configuring the application
 
-1. Enable JWT SSO on your application. Refer to your application's documentation for instruction on enabling JWT SSO
+1. Enable JWT SSO on your application. Refer to your application's documentation for instructions on enabling JWT SSO
  for your application.
 2. Get the configuration details of the application by signing into the admin portal or referring to the
  documentation of your application.
@@ -37,9 +37,9 @@ JWT SSO Version 1.0.0 Inbound Authenticator is supported by WSO2 Identity Server
 
 ### Deploying JWT SSO artifacts
 
-1. Place the org.wso2.carbon.identity.sso.jwt-x.x.x.jar file into the <IS_HOME>/repository/components/dropins
+1. Place the ``org.wso2.carbon.identity.sso.jwt-x.x.x.jar`` file into the ``<IS_HOME>/repository/components/dropins``
  directory.
-2. Add the configuration below in **deployment.toml** file resides in <IS_HOME>/repository/conf directory.
+2. Add the configuration below in ``deployment.toml`` file resides in ``<IS_HOME>/repository/conf`` directory.
     ````
     [[resource.access_control]]
     context="/identity(.*)"
@@ -71,19 +71,19 @@ administrator.
     | Relying Party | The name of the relying party. This will be needed when we perform authentication request. |  | test-app |
     | Endpoint API | The endpoint where the JWT response should be sent to after authenticating the user. |  | https://your-app.com/api/sso/v2/sso/jwt |
     | API Key | The API Key used to sign the JWT token. |  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx |
-    | JWT Token Expiration Period | The token expiration (exp) to set since the token was generated in seconds. | 120 | 60 |
+    | JWT Token Expiration Period | The token expiration (exp) to be set. | 120 | 60 |
     | JWT Signing Algorithm | The JWS Algorithm used to sign the token. | HS256 | Supported Algorithms: HS256/ HS384 / HS512 |
     | Redirect URL Regex | The regex to validate the Redirect URL. |  | https://your-app.com/.* |
     | Error URL Regex | The regex to validate the Error URL. |  | https://your-app.com/.* |
     | Logout URL | The logout URL to be redirected to after the successful logout in WSO2 IS. |  | https://your-app.com/users/sign_out |
-    | JWT Parameter Name | The JWT parameter name to be used to send the JWT token after the authenticating the user. | jwt | jwt |
+    | JWT Parameter Name | The JWT parameter name to be used to send the JWT token after authenticating the user. | jwt | jwt |
     | Redirect URL Parameter Name | The Redirect URL parameter name to be used to include the Redirect URL. | return_to | return_to |
     | Error URL Parameter Name | The Error URL parameter name to be used to include the Error URL. | error_url | error_url |
 8. Go to **Claim Configuration** and click **Define Custom Claim Dialect** to define the claims to generate the JWT
  token. (This is required to include the user claims in the JWT token; otherwise, no attributes will be included in
  the JWT token apart from the default attributes such as exp and iat.) Add the **Service Provider Claim** name that
- corresponds to the **Local Claim** URI and mark it as **Mandatory Claim**. You'll have to refer to your application's
- documentation to get the required claims for the service provider. 
+ corresponds to the **Local Claim** URI and mark it as **Requested Claim** and **Mandatory Claim**. You need to refer to
+ your application's documentation to get the required claims for the service provider. 
 ![Claim Configuration](images/image3.png)
 8. Click **Update** to save the changes. Now you have configured the service provider.
 
