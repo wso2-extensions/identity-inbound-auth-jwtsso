@@ -35,7 +35,13 @@
     <description>
     </description>
     <url>http://wso2.org</url>
-
+    <scm>
+        <connection>scm:git:https://github.com/wso2-extensions/identity-inbound-auth-jwtsso.git</connection>
+        <url>https://github.com/wso2-extensions/identity-inbound-auth-jwtsso.git</url>
+        <developerConnection>scm:git:https://github.com/wso2-extensions/identity-inbound-auth-jwtsso.git
+        </developerConnection>
+        <tag>HEAD</tag>
+    </scm>
     <dependencyManagement>
         <dependencies>
             <dependency>
