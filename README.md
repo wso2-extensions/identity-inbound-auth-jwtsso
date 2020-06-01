@@ -1,2 +1,2 @@
 # identity-inbound-auth-jwtsso
-An Inbound Authenticator based on JWT
+Welcome to the WSO2 Identity Server (IS) JWT SSO Inbound Authenticator.
