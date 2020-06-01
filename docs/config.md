@@ -37,9 +37,9 @@ JWT SSO Version 1.0.0 Inbound Authenticator is supported by WSO2 Identity Server
 
 ### Deploying JWT SSO artifacts
 
-1. Place the ``org.wso2.carbon.identity.sso.jwt-x.x.x.jar`` file into the ``<IS_HOME>/repository/components/dropins``
+1. Place the `org.wso2.carbon.identity.sso.jwt-x.x.x.jar` file into the `<IS_HOME>/repository/components/dropins`
  directory.
-2. Add the configuration below in ``deployment.toml`` file resides in ``<IS_HOME>/repository/conf`` directory.
+2. Add the configuration below in `deployment.toml` file resides in `<IS_HOME>/repository/conf` directory.
     ````
     [[resource.access_control]]
     context="/identity(.*)"
