@@ -27,7 +27,7 @@
     <groupId>org.wso2.carbon.identity.inbound.auth.jwt</groupId>
     <artifactId>identity-inbound-auth-jwtsso</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Carbon JWT SSO</name>
     <description>
@@ -38,7 +38,7 @@
         <url>https://github.com/wso2-extensions/identity-inbound-auth-jwtsso.git</url>
         <developerConnection>scm:git:https://github.com/wso2-extensions/identity-inbound-auth-jwtsso.git
         </developerConnection>
-        <tag>v1.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <dependencyManagement>
