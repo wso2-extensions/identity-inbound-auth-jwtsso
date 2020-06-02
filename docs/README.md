@@ -9,4 +9,4 @@ JWT-based SSO protocol.
 
 ## Additional information
 To download the JWT SSO inbound authenticator, go to
-[https://store.wso2.com/store/assets/isconnector/details/jwtsso](https://store.wso2.com/store/assets/isconnector/details/25bdf0b9-2584-4306-9872-831eaaebe7cd)
+[https://store.wso2.com/store/assets/isconnector/details/jwtsso](https://store.wso2.com/store/assets/isconnector/details/25bdf0b9-2584-4306-9872-831eaaebe7cd).
