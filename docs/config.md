@@ -19,7 +19,7 @@ JWT SSO Version 1.0.0 Inbound Authenticator is supported by WSO2 Identity Server
 * [Download WSO2 Identity Server](https://wso2.com/identity-and-access-management) and
 [Install the Product](https://is.docs.wso2.com/en/latest/setup/installing-the-product).
 * Download the JWT SSO Inbound Authenticator JAR from the 
-[IS Connector store](https://store.wso2.com/store/assets/isconnector/list).
+[IS Connector store](https://store.wso2.com/store/assets/isconnector/details/25bdf0b9-2584-4306-9872-831eaaebe7cd).
 
 ### Configuring the application
 
