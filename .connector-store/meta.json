@@ -1,0 +1,10 @@
+{
+    "name": "OPA",
+    "owner": "WSO2",
+    "category": "Adaptive Authentication Function",
+    "documentationUrl": "https://github.com/wso2-extensions/identity-application-authz-opa/tree/v1.0.1/docs",
+    "description": "\"invokeOPA\" in adaptive scripts to be able to pass any JSON object as the payload, and from OPA it is possible to process the data object and extract the required information. Then OPA engine will the final authentication or authorization decision will be made by OPA according to the policies that have defined.",
+    "status": "Active",
+    "labels": [],
+    "releases": []
+}
