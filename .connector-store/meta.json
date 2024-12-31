@@ -1,16 +1,15 @@
 {
-    "name": "JWT SSO Inbound Authenticator",
+    "name": "OPA",
     "owner": "WSO2",
-    "category": "Inbound authenticator",
-    "documentationUrl": "https://github.com/wso2-extensions/identity-inbound-auth-jwtsso/tree/v1.0.0/docs",
-    "description": "The JWT SSO Inbound Authenticator is an inbound authentication protocol to implement JWT based SSO for your application with WSO2 Identity Server.",
+    "category": "Adaptive Authentication Function",
+    "documentationUrl": "https://github.com/wso2-extensions/identity-application-authz-opa/tree/v1.0.1/docs",
+    "description": "\"invokeOPA\" in adaptive scripts to be able to pass any JSON object as the payload, and from OPA it is possible to process the data object and extract the required information. Then OPA engine will the final authentication or authorization decision will be made by OPA according to the policies that have defined.",
     "status": "Active",
     "labels": [],
     "releases": [
         {
             "tagName": "1.0.0",
             "products": [
-                "IS 6.0.0",
                 "IS 5.10.0"
             ]
         }
