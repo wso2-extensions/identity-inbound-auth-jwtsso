@@ -5,7 +5,7 @@
     "documentationUrl": "https://github.com/wso2-extensions/identity-inbound-auth-jwtsso/tree/v1.0.0/docs",
     "description": "The JWT SSO Inbound Authenticator is an inbound authentication protocol to implement JWT based SSO for your application with WSO2 Identity Server.",
     "status": "Active",
-    "labels": [],
+    "labels": ["Retired(IS 7.1.0+)"],
     "releases": [
         {
             "tagName": "v1.0.0",
