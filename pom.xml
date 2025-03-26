@@ -211,7 +211,7 @@
 
         <nimbusds.version>7.3.0.wso2v1</nimbusds.version>
         <nimbusds.osgi.version.range>[7.3.0,8.0.0)</nimbusds.osgi.version.range>
-        <json-smart.version>2.4.8</json-smart.version>
+        <json-smart.version>2.4.9</json-smart.version>
         <json-smart.version.range>[2.3.0, 3.0.0)</json-smart.version.range>
 
         <!--Test Dependencies-->
